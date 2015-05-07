@@ -112,7 +112,8 @@ void updated_farm_position(SpriteHandler *sh){
 		BFN_SET(obj[0].attribute1, x, ATTR1_X);
 
 		if(farm_list[i].state == FS_EMPTY)
-			BFN_SET(obj[0].attribute0, MODE_TRANSPARENT, ATTR0_MODE);
+			obj[0].attribute0 = MODE_TRANSPARENT;
+			// BFN_SET(obj[0].attribute0, MODE_TRANSPARENT, ATTR0_MODE);
 	}
 }
 
@@ -151,7 +152,8 @@ void update_sprite_id(u32 id, SpriteHandler *sh){
 		obj[ 0 ].attribute2 = sprites_attributes[ sid ].attribute2;
 	}
 	else{
-		BFN_SET(obj[0].attribute0, MODE_TRANSPARENT, ATTR0_MODE);
+		// BFN_SET(obj[0].attribute0, MODE_TRANSPARENT, ATTR0_MODE);
+		obj[0].attribute0 = MODE_TRANSPARENT;
 	}
 
 }
@@ -177,7 +179,7 @@ s32 getFarmId(SpriteHandler *sh){
 
 void run_action(TileQuad * cur_tq, SpriteHandler * sh){
 	s32 farm_id = getFarmId(sh);
-	// char buff[50];
+	char buff[50];
 	switch(cur_tool_sel){
 		case TT_EMPTY:
 
@@ -188,9 +190,9 @@ void run_action(TileQuad * cur_tq, SpriteHandler * sh){
 
 				farm_list[farm_id].state 	= FS_EMPTY;
 				update_sprite_id(farm_id, sh);
-// sprintf(buff, "TT_EMPTY - %d", farm_id);
-// reset_text();
-// print(3, 3, buff, TILE_ASCI_TRAN);
+sprintf(buff, "TT_EMPTY - %d", farm_id);
+reset_text();
+print(3, 3, buff, TILE_ASCI_TRAN);
 			}
 
 			break;

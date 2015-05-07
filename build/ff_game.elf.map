@@ -165,13 +165,13 @@ Linker script and memory map
  *(.plt)
                 0x0800021c                . = ALIGN (0x4)
 
-.text           0x08000220    0x14d48
+.text           0x08000220    0x14d70
  *(EXCLUDE_FILE(*.iwram*) .text)
  .text          0x08000220        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/gba_crt0.o
  .text          0x08000220        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crti.o
  .text          0x08000220       0xd4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtbegin.o
  *fill*         0x080002f4        0x4 ff
- .text          0x080002f8     0x9cf0 main.o
+ .text          0x080002f8     0x9d18 main.o
                 0x080002f8                keyPoll
                 0x0800031c                keyIsDown
                 0x0800032c                keyIsUp
@@ -213,245 +213,245 @@ Linker script and memory map
                 0x08001a9c                PlaySound
                 0x08001b30                MyHandler
                 0x08001b80                updated_farm_position
-                0x08001c34                init_farm_list
-                0x08001cd8                update_sprite_id
-                0x08001d34                getFarmId
-                0x08001d88                run_action
-                0x08001e74                another_day
-                0x08002020                Initialize
-                0x080022a8                show_enter_name
-                0x08003b0c                game_intro
-                0x08003b78                start_menu
-                0x08006218                Draw
-                0x0800631c                updateTimers
-                0x08006368                getTile
-                0x080063a8                getTileQuad
-                0x080064c4                oam_init
-                0x08006508                initSpriteHandler
-                0x080065e4                loadSpriteHandler
-                0x08006624                dude_init
-                0x080066a0                dude_update
-                0x08007868                dude_set_state
-                0x08007870                dude_input
-                0x080078d8                dude_move
-                0x08008958                LoadContent
-                0x08008d28                determineMove
-                0x08008d84                dude_animate
-                0x08008e48                dude_ani_stand
-                0x08008ea0                dude_ani_walk
-                0x08008f04                loadRegionPal
-                0x08008f28                loadRegionMap
-                0x08008fa8                loadPortals
-                0x08008fdc                loadRegion
-                0x080096a0                Update
-                0x08009fc0                getPixelColor
- .text          0x08009fe8      0x11c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_udivsi3.o)
-                0x08009fe8                __udivsi3
-                0x08009fe8                __aeabi_uidiv
-                0x0800a0e4                __aeabi_uidivmod
- .text          0x0800a104      0x150 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_divsi3.o)
-                0x0800a104                __aeabi_idiv
-                0x0800a104                __divsi3
-                0x0800a234                __aeabi_idivmod
- .text          0x0800a254        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_dvmd_tls.o)
-                0x0800a254                __aeabi_ldiv0
-                0x0800a254                __aeabi_idiv0
- .text          0x0800a258      0x41c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_addsubdf3.o)
-                0x0800a258                __aeabi_drsub
-                0x0800a260                __subdf3
-                0x0800a260                __aeabi_dsub
-                0x0800a264                __aeabi_dadd
-                0x0800a264                __adddf3
-                0x0800a574                __aeabi_ui2d
-                0x0800a574                __floatunsidf
-                0x0800a598                __floatsidf
-                0x0800a598                __aeabi_i2d
-                0x0800a5c0                __extendsfdf2
-                0x0800a5c0                __aeabi_f2d
-                0x0800a600                __aeabi_ul2d
-                0x0800a600                __floatundidf
-                0x0800a614                __aeabi_l2d
-                0x0800a614                __floatdidf
- .text          0x0800a674      0x49c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_muldivdf3.o)
-                0x0800a674                __aeabi_dmul
-                0x0800a674                __muldf3
-                0x0800a904                __aeabi_ddiv
-                0x0800a904                __divdf3
- .text          0x0800ab10       0x5c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_fixdfsi.o)
-                0x0800ab10                __fixdfsi
-                0x0800ab10                __aeabi_d2iz
- .text          0x0800ab6c       0x54 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_fixunsdfsi.o)
-                0x0800ab6c                __fixunsdfsi
-                0x0800ab6c                __aeabi_d2uiz
- .text          0x0800abc0       0x58 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-init.o)
-                0x0800abc0                __libc_init_array
- .text          0x0800ac18       0x30 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-malloc.o)
-                0x0800ac18                malloc
-                0x0800ac30                free
- .text          0x0800ac48      0x540 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mallocr.o)
-                0x0800ac48                _malloc_r
- .text          0x0800b188       0x84 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-memcpy-stub.o)
-                0x0800b188                memcpy
- .text          0x0800b20c       0x98 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-memset.o)
-                0x0800b20c                memset
- .text          0x0800b2a4        0x8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mlock.o)
-                0x0800b2a4                __malloc_lock
-                0x0800b2a8                __malloc_unlock
- .text          0x0800b2ac       0x84 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-sprintf.o)
-                0x0800b2ac                _sprintf_r
-                0x0800b2ec                sprintf
- .text          0x0800b330       0x10 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strlen.o)
-                0x0800b330                strlen
- .text          0x0800b340     0x3238 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfprintf.o)
-                0x0800b7e4                _svfprintf_r
- .text          0x0800e578       0xdc /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-wcrtomb.o)
-                0x0800e578                _wcrtomb_r
-                0x0800e5e0                wcrtomb
- .text          0x0800e654       0x40 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-wcsrtombs.o)
-                0x0800e654                _wcsrtombs_r
-                0x0800e66c                wcsrtombs
- .text          0x0800e694      0x29c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-wctomb_r.o)
-                0x0800e694                __utf8_wctomb
-                0x0800e754                _wctomb_r
-                0x0800e78c                __ascii_wctomb
-                0x0800e7a8                __sjis_wctomb
-                0x0800e828                __eucjp_wctomb
-                0x0800e8b0                __jis_wctomb
- .text          0x0800e930     0x11f8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-dtoa.o)
-                0x0800ea90                _dtoa_r
- .text          0x0800fb28      0x254 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-freer.o)
-                0x0800fb28                _malloc_trim_r
-                0x0800fbcc                _free_r
- .text          0x0800fd7c        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-impure.o)
- .text          0x0800fd7c      0x96c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-locale.o)
-                0x08010460                _setlocale_r
-                0x08010688                __locale_charset
-                0x08010690                __locale_mb_cur_max
-                0x0801069c                __locale_msgcharset
-                0x080106a8                __locale_cjk_lang
-                0x080106b4                _localeconv_r
-                0x080106c0                setlocale
-                0x080106dc                localeconv
- .text          0x080106e8      0x5f0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mbtowc_r.o)
-                0x080106e8                __utf8_mbtowc
-                0x080109a4                _mbtowc_r
-                0x080109e0                __ascii_mbtowc
-                0x08010a0c                __sjis_mbtowc
-                0x08010ac0                __eucjp_mbtowc
-                0x08010b90                __jis_mbtowc
- .text          0x08010cd8       0x8c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-memchr-stub.o)
-                0x08010cd8                memchr
- *fill*         0x08010d64        0x4 ff
- .text          0x08010d68      0x9c0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mprec.o)
-                0x08010d68                _Balloc
-                0x08010dbc                _Bfree
-                0x08010dd0                __multadd
-                0x08010e6c                __s2b
-                0x08010f08                __hi0bits
-                0x08010f44                __lo0bits
-                0x08010fa0                __i2b
-                0x08010fb8                __multiply
-                0x08011120                __pow5mult
-                0x080111e0                __lshift
-                0x080112b0                __mcmp
-                0x080112ec                __mdiff
-                0x080113d8                __ulp
-                0x08011428                __b2d
-                0x08011508                __d2b
-                0x080115c8                __ratio
-                0x0801163c                _mprec_log10
-                0x0801167c                __copybits
-                0x080116c0                __any_on
- .text          0x08011728       0x5c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-s_fpclassify.o)
-                0x08011728                __fpclassifyd
- *fill*         0x08011784        0x4 ff
- .text          0x08011788       0x80 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-s_frexp.o)
-                0x08011788                frexp
- .text          0x08011808       0x58 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strcasecmp.o)
-                0x08011808                strcasecmp
- .text          0x08011860       0x54 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strcat.o)
-                0x08011860                strcat
- .text          0x080118b4       0xdc /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strchr.o)
-                0x080118b4                strchr
- .text          0x08011990       0x14 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strcmp.o)
-                0x08011990                strcmp
- .text          0x080119a4       0x10 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strcpy.o)
-                0x080119a4                strcpy
- .text          0x080119b4       0x4c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strlcpy.o)
-                0x080119b4                strlcpy
- .text          0x08011a00       0x5c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strncasecmp.o)
-                0x08011a00                strncasecmp
- .text          0x08011a5c       0x98 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strncmp.o)
-                0x08011a5c                strncmp
- .text          0x08011af4       0x7c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strncpy.o)
-                0x08011af4                strncpy
- .text          0x08011b70      0x17c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strtol.o)
-                0x08011b70                _strtol_r
-                0x08011ccc                strtol
- .text          0x08011cec     0x2368 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfiprintf.o)
-                0x0801219c                __ssprint_r
-                0x080122d0                _svfiprintf_r
- .text          0x08014054      0x13c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-wcsnrtombs.o)
-                0x08014054                _wcsnrtombs_r
-                0x08014160                wcsnrtombs
- .text          0x08014190       0x64 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-callocr.o)
-                0x08014190                _calloc_r
- .text          0x080141f4       0x10 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-ctype_.o)
-                0x080141f4                __set_ctype
- .text          0x08014204       0xa8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-getenv_r.o)
-                0x08014204                _findenv_r
-                0x0801429c                _getenv_r
- .text          0x080142ac       0x9c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-memmove.o)
-                0x080142ac                memmove
- .text          0x08014348      0x3dc /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-reallocr.o)
-                0x08014348                _realloc_r
- .text          0x08014724        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-environ.o)
- .text          0x08014724        0x8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-envlock.o)
-                0x08014724                __env_lock
-                0x08014728                __env_unlock
- .text          0x0801472c       0x54 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libsysbase.a(sbrk.o)
-                0x0801472c                _sbrk_r
- .text          0x08014780        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libsysbase.a(malloc_vars.o)
- .text          0x08014780      0x144 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_cmpdf2.o)
-                0x08014780                __gtdf2
-                0x08014780                __gedf2
-                0x08014788                __ltdf2
-                0x08014788                __ledf2
-                0x08014790                __eqdf2
-                0x08014790                __nedf2
-                0x08014790                __cmpdf2
-                0x08014818                __aeabi_cdrcmple
-                0x08014834                __aeabi_cdcmple
-                0x08014834                __aeabi_cdcmpeq
-                0x0801484c                __aeabi_dcmpeq
-                0x08014864                __aeabi_dcmplt
-                0x0801487c                __aeabi_dcmple
-                0x08014894                __aeabi_dcmpge
-                0x080148ac                __aeabi_dcmpgt
- .text          0x080148c4       0x3c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_aeabi_uldivmod.o)
-                0x080148c4                __aeabi_uldivmod
- .text          0x08014900       0x74 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(bpabi.o)
-                0x08014900                __gnu_ldivmod_helper
-                0x0801493c                __gnu_uldivmod_helper
- .text          0x08014974       0x60 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_muldi3.o)
-                0x08014974                __aeabi_lmul
-                0x08014974                __muldi3
- .text          0x080149d4      0x1f4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_divdi3.o)
-                0x080149d4                __divdi3
- .text          0x08014bc8      0x15c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_udivdi3.o)
-                0x08014bc8                __udivdi3
- .text          0x08014d24       0x28 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_clzdi2.o)
-                0x08014d24                __clzdi2
- .text          0x08014d4c       0x48 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_clzsi2.o)
-                0x08014d4c                __clzsi2
- .text          0x08014d94        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtend.o
- .text          0x08014d94        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtn.o
+                0x08001c28                init_farm_list
+                0x08001ccc                update_sprite_id
+                0x08001d24                getFarmId
+                0x08001d78                run_action
+                0x08001eb8                another_day
+                0x08002058                Initialize
+                0x080022e0                show_enter_name
+                0x08003b44                game_intro
+                0x08003bb0                start_menu
+                0x08006250                Draw
+                0x08006354                updateTimers
+                0x080063a0                getTile
+                0x080063e0                getTileQuad
+                0x080064fc                oam_init
+                0x08006540                initSpriteHandler
+                0x0800661c                loadSpriteHandler
+                0x0800665c                dude_init
+                0x080066d8                dude_update
+                0x080078a0                dude_set_state
+                0x080078a8                dude_input
+                0x08007910                dude_move
+                0x08008990                LoadContent
+                0x08008d60                determineMove
+                0x08008dbc                dude_animate
+                0x08008e80                dude_ani_stand
+                0x08008ed8                dude_ani_walk
+                0x08008f3c                loadRegionPal
+                0x08008f60                loadRegionMap
+                0x08008fe0                loadPortals
+                0x08009014                loadRegion
+                0x080096d8                Update
+                0x08009fe8                getPixelColor
+ .text          0x0800a010      0x11c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_udivsi3.o)
+                0x0800a010                __udivsi3
+                0x0800a010                __aeabi_uidiv
+                0x0800a10c                __aeabi_uidivmod
+ .text          0x0800a12c      0x150 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_divsi3.o)
+                0x0800a12c                __aeabi_idiv
+                0x0800a12c                __divsi3
+                0x0800a25c                __aeabi_idivmod
+ .text          0x0800a27c        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_dvmd_tls.o)
+                0x0800a27c                __aeabi_ldiv0
+                0x0800a27c                __aeabi_idiv0
+ .text          0x0800a280      0x41c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_addsubdf3.o)
+                0x0800a280                __aeabi_drsub
+                0x0800a288                __subdf3
+                0x0800a288                __aeabi_dsub
+                0x0800a28c                __aeabi_dadd
+                0x0800a28c                __adddf3
+                0x0800a59c                __aeabi_ui2d
+                0x0800a59c                __floatunsidf
+                0x0800a5c0                __floatsidf
+                0x0800a5c0                __aeabi_i2d
+                0x0800a5e8                __extendsfdf2
+                0x0800a5e8                __aeabi_f2d
+                0x0800a628                __aeabi_ul2d
+                0x0800a628                __floatundidf
+                0x0800a63c                __aeabi_l2d
+                0x0800a63c                __floatdidf
+ .text          0x0800a69c      0x49c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_muldivdf3.o)
+                0x0800a69c                __aeabi_dmul
+                0x0800a69c                __muldf3
+                0x0800a92c                __aeabi_ddiv
+                0x0800a92c                __divdf3
+ .text          0x0800ab38       0x5c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_fixdfsi.o)
+                0x0800ab38                __fixdfsi
+                0x0800ab38                __aeabi_d2iz
+ .text          0x0800ab94       0x54 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_fixunsdfsi.o)
+                0x0800ab94                __fixunsdfsi
+                0x0800ab94                __aeabi_d2uiz
+ .text          0x0800abe8       0x58 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-init.o)
+                0x0800abe8                __libc_init_array
+ .text          0x0800ac40       0x30 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-malloc.o)
+                0x0800ac40                malloc
+                0x0800ac58                free
+ .text          0x0800ac70      0x540 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mallocr.o)
+                0x0800ac70                _malloc_r
+ .text          0x0800b1b0       0x84 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-memcpy-stub.o)
+                0x0800b1b0                memcpy
+ .text          0x0800b234       0x98 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-memset.o)
+                0x0800b234                memset
+ .text          0x0800b2cc        0x8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mlock.o)
+                0x0800b2cc                __malloc_lock
+                0x0800b2d0                __malloc_unlock
+ .text          0x0800b2d4       0x84 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-sprintf.o)
+                0x0800b2d4                _sprintf_r
+                0x0800b314                sprintf
+ .text          0x0800b358       0x10 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strlen.o)
+                0x0800b358                strlen
+ .text          0x0800b368     0x3238 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfprintf.o)
+                0x0800b80c                _svfprintf_r
+ .text          0x0800e5a0       0xdc /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-wcrtomb.o)
+                0x0800e5a0                _wcrtomb_r
+                0x0800e608                wcrtomb
+ .text          0x0800e67c       0x40 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-wcsrtombs.o)
+                0x0800e67c                _wcsrtombs_r
+                0x0800e694                wcsrtombs
+ .text          0x0800e6bc      0x29c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-wctomb_r.o)
+                0x0800e6bc                __utf8_wctomb
+                0x0800e77c                _wctomb_r
+                0x0800e7b4                __ascii_wctomb
+                0x0800e7d0                __sjis_wctomb
+                0x0800e850                __eucjp_wctomb
+                0x0800e8d8                __jis_wctomb
+ .text          0x0800e958     0x11f8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-dtoa.o)
+                0x0800eab8                _dtoa_r
+ .text          0x0800fb50      0x254 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-freer.o)
+                0x0800fb50                _malloc_trim_r
+                0x0800fbf4                _free_r
+ .text          0x0800fda4        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-impure.o)
+ .text          0x0800fda4      0x96c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-locale.o)
+                0x08010488                _setlocale_r
+                0x080106b0                __locale_charset
+                0x080106b8                __locale_mb_cur_max
+                0x080106c4                __locale_msgcharset
+                0x080106d0                __locale_cjk_lang
+                0x080106dc                _localeconv_r
+                0x080106e8                setlocale
+                0x08010704                localeconv
+ .text          0x08010710      0x5f0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mbtowc_r.o)
+                0x08010710                __utf8_mbtowc
+                0x080109cc                _mbtowc_r
+                0x08010a08                __ascii_mbtowc
+                0x08010a34                __sjis_mbtowc
+                0x08010ae8                __eucjp_mbtowc
+                0x08010bb8                __jis_mbtowc
+ .text          0x08010d00       0x8c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-memchr-stub.o)
+                0x08010d00                memchr
+ *fill*         0x08010d8c        0x4 ff
+ .text          0x08010d90      0x9c0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mprec.o)
+                0x08010d90                _Balloc
+                0x08010de4                _Bfree
+                0x08010df8                __multadd
+                0x08010e94                __s2b
+                0x08010f30                __hi0bits
+                0x08010f6c                __lo0bits
+                0x08010fc8                __i2b
+                0x08010fe0                __multiply
+                0x08011148                __pow5mult
+                0x08011208                __lshift
+                0x080112d8                __mcmp
+                0x08011314                __mdiff
+                0x08011400                __ulp
+                0x08011450                __b2d
+                0x08011530                __d2b
+                0x080115f0                __ratio
+                0x08011664                _mprec_log10
+                0x080116a4                __copybits
+                0x080116e8                __any_on
+ .text          0x08011750       0x5c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-s_fpclassify.o)
+                0x08011750                __fpclassifyd
+ *fill*         0x080117ac        0x4 ff
+ .text          0x080117b0       0x80 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-s_frexp.o)
+                0x080117b0                frexp
+ .text          0x08011830       0x58 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strcasecmp.o)
+                0x08011830                strcasecmp
+ .text          0x08011888       0x54 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strcat.o)
+                0x08011888                strcat
+ .text          0x080118dc       0xdc /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strchr.o)
+                0x080118dc                strchr
+ .text          0x080119b8       0x14 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strcmp.o)
+                0x080119b8                strcmp
+ .text          0x080119cc       0x10 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strcpy.o)
+                0x080119cc                strcpy
+ .text          0x080119dc       0x4c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strlcpy.o)
+                0x080119dc                strlcpy
+ .text          0x08011a28       0x5c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strncasecmp.o)
+                0x08011a28                strncasecmp
+ .text          0x08011a84       0x98 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strncmp.o)
+                0x08011a84                strncmp
+ .text          0x08011b1c       0x7c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strncpy.o)
+                0x08011b1c                strncpy
+ .text          0x08011b98      0x17c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-strtol.o)
+                0x08011b98                _strtol_r
+                0x08011cf4                strtol
+ .text          0x08011d14     0x2368 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfiprintf.o)
+                0x080121c4                __ssprint_r
+                0x080122f8                _svfiprintf_r
+ .text          0x0801407c      0x13c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-wcsnrtombs.o)
+                0x0801407c                _wcsnrtombs_r
+                0x08014188                wcsnrtombs
+ .text          0x080141b8       0x64 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-callocr.o)
+                0x080141b8                _calloc_r
+ .text          0x0801421c       0x10 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-ctype_.o)
+                0x0801421c                __set_ctype
+ .text          0x0801422c       0xa8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-getenv_r.o)
+                0x0801422c                _findenv_r
+                0x080142c4                _getenv_r
+ .text          0x080142d4       0x9c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-memmove.o)
+                0x080142d4                memmove
+ .text          0x08014370      0x3dc /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-reallocr.o)
+                0x08014370                _realloc_r
+ .text          0x0801474c        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-environ.o)
+ .text          0x0801474c        0x8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-envlock.o)
+                0x0801474c                __env_lock
+                0x08014750                __env_unlock
+ .text          0x08014754       0x54 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libsysbase.a(sbrk.o)
+                0x08014754                _sbrk_r
+ .text          0x080147a8        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libsysbase.a(malloc_vars.o)
+ .text          0x080147a8      0x144 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_arm_cmpdf2.o)
+                0x080147a8                __gtdf2
+                0x080147a8                __gedf2
+                0x080147b0                __ltdf2
+                0x080147b0                __ledf2
+                0x080147b8                __eqdf2
+                0x080147b8                __nedf2
+                0x080147b8                __cmpdf2
+                0x08014840                __aeabi_cdrcmple
+                0x0801485c                __aeabi_cdcmple
+                0x0801485c                __aeabi_cdcmpeq
+                0x08014874                __aeabi_dcmpeq
+                0x0801488c                __aeabi_dcmplt
+                0x080148a4                __aeabi_dcmple
+                0x080148bc                __aeabi_dcmpge
+                0x080148d4                __aeabi_dcmpgt
+ .text          0x080148ec       0x3c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_aeabi_uldivmod.o)
+                0x080148ec                __aeabi_uldivmod
+ .text          0x08014928       0x74 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(bpabi.o)
+                0x08014928                __gnu_ldivmod_helper
+                0x08014964                __gnu_uldivmod_helper
+ .text          0x0801499c       0x60 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_muldi3.o)
+                0x0801499c                __aeabi_lmul
+                0x0801499c                __muldi3
+ .text          0x080149fc      0x1f4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_divdi3.o)
+                0x080149fc                __divdi3
+ .text          0x08014bf0      0x15c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_udivdi3.o)
+                0x08014bf0                __udivdi3
+ .text          0x08014d4c       0x28 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_clzdi2.o)
+                0x08014d4c                __clzdi2
+ .text          0x08014d74       0x48 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/libgcc.a(_clzsi2.o)
+                0x08014d74                __clzsi2
+ .text          0x08014dbc        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtend.o
+ .text          0x08014dbc        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtn.o
  *(.text .stub .text.* .gnu.linkonce.t.*)
- .text.startup  0x08014d94      0x110 main.o
-                0x08014d94                main
- *fill*         0x08014ea4        0x4 ff
+ .text.startup  0x08014dbc      0x110 main.o
+                0x08014dbc                main
+ *fill*         0x08014ecc        0x4 ff
  .text.startup.__stub
-                0x08014ea8       0xb4 linker stubs
+                0x08014ed0       0xb4 linker stubs
  *(.text.*personality*)
  *(.gnu.warning)
  *(.glue_7t)
@@ -460,149 +460,149 @@ Linker script and memory map
  .glue_7        0x00000000        0x0 linker stubs
  *(.vfp11_veneer)
  .vfp11_veneer  0x00000000        0x0 linker stubs
-                0x08014f5c                . = ALIGN (0x4)
-                0x08014f5c                __text_end = .
+                0x08014f84                . = ALIGN (0x4)
+                0x08014f84                __text_end = .
 
-.v4_bx          0x08014f68        0x0
+.v4_bx          0x08014f90        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x08014f68        0x0
+.iplt           0x08014f90        0x0
  .iplt          0x00000000        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/gba_crt0.o
 
-.fini           0x08014f68        0xc
+.fini           0x08014f90        0xc
  *(.fini)
- .fini          0x08014f68        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crti.o
-                0x08014f68                _fini
- .fini          0x08014f6c        0x8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtn.o
-                0x08014f74                . = ALIGN (0x4)
+ .fini          0x08014f90        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crti.o
+                0x08014f90                _fini
+ .fini          0x08014f94        0x8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtn.o
+                0x08014f9c                . = ALIGN (0x4)
 
-.rodata         0x08014f78    0xbc988
+.rodata         0x08014fa0    0xbc998
  *(.rodata)
- .rodata        0x08014f78    0xbb890 main.o
-                0x08015110                fontTiles
-                0x080185d0                Water_Tiles
-                0x08018690                Water_Map
-                0x08018e90                sprite_data_2d_8bppTiles
-                0x0801cf10                id_stand
-                0x0801cf20                id_walk
-                0x0801cfa0                Home_Farm_Tiles
-                0x0801e2e0                Home_Farm_Map
-                0x08025360                Home_Farm_Hitmap_Tiles
-                0x08025aa0                Home_Farm_Hitmap_Map
-                0x0802cb20                Map_Palette
-                0x0802cd20                sprite_data_2d_8bppPal
-                0x0802cf20                Other_Farm1_Tiles
-                0x0802e060                Other_Farm1_Map
-                0x08035a40                Other_Farm1_Hitmap_Map
-                0x0803d420                Other_Farm1_Hitmap_Tiles
-                0x0803db60                Other_Farm2_Tiles
-                0x0803eca0                Other_Farm2_Map
-                0x08046680                Other_Farm2_Hitmap_Tiles
-                0x08046dc0                Other_Farm2_Hitmap_Map
-                0x0804e7a0                Other_Farm3_Tiles
-                0x0804f7e0                Other_Farm3_Map
-                0x080571c0                Other_Farm3_Hitmap_Tiles
-                0x08057900                Other_Farm3_Hitmap_Map
-                0x0805f2e0                Town_Tiles
-                0x08060320                Town_Map
-                0x08069920                Town_Hitmap_Tiles
-                0x08069ee0                Town_Hitmap_Map
-                0x080734e0                Road1_Tiles
-                0x08074520                Road1_Map
-                0x0808a960                Road1_Hitmap_Tiles
-                0x0808af20                Road1_Hitmap_Map
-                0x080a1360                story
-                0x080b8fc0                select
-                0x080b90c0                spurs
-                0x080bc078                openning
-                0x080c0b88                rooster
-                0x080c49f8                digging
-                0x080c6e08                title_Bitmap
-                0x080d0408                title_Palette
-                0x080d0608                fontPal
- .rodata        0x080d0808      0x384 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfprintf.o)
- .rodata        0x080d0b8c        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-impure.o)
-                0x080d0b8c                _global_impure_ptr
- .rodata        0x080d0b90       0xf0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-locale.o)
- .rodata        0x080d0c80       0xa8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mbtowc_r.o)
- .rodata        0x080d0d28      0x128 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mprec.o)
-                0x080d0d38                __mprec_tens
-                0x080d0e00                __mprec_tinytens
-                0x080d0e28                __mprec_bigtens
- .rodata        0x080d0e50      0x55c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfiprintf.o)
-                0x080d11b4                __chclass
-                0x080d12b4                __state_table
-                0x080d1320                __action_table
- .rodata        0x080d13ac      0x104 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-ctype_.o)
-                0x080d13ac                _ctype_
+ .rodata        0x08014fa0    0xbb890 main.o
+                0x08015138                fontTiles
+                0x080185f8                Water_Tiles
+                0x080186b8                Water_Map
+                0x08018eb8                sprite_data_2d_8bppTiles
+                0x0801cf38                id_stand
+                0x0801cf48                id_walk
+                0x0801cfc8                Home_Farm_Tiles
+                0x0801e308                Home_Farm_Map
+                0x08025388                Home_Farm_Hitmap_Tiles
+                0x08025ac8                Home_Farm_Hitmap_Map
+                0x0802cb48                Map_Palette
+                0x0802cd48                sprite_data_2d_8bppPal
+                0x0802cf48                Other_Farm1_Tiles
+                0x0802e088                Other_Farm1_Map
+                0x08035a68                Other_Farm1_Hitmap_Map
+                0x0803d448                Other_Farm1_Hitmap_Tiles
+                0x0803db88                Other_Farm2_Tiles
+                0x0803ecc8                Other_Farm2_Map
+                0x080466a8                Other_Farm2_Hitmap_Tiles
+                0x08046de8                Other_Farm2_Hitmap_Map
+                0x0804e7c8                Other_Farm3_Tiles
+                0x0804f808                Other_Farm3_Map
+                0x080571e8                Other_Farm3_Hitmap_Tiles
+                0x08057928                Other_Farm3_Hitmap_Map
+                0x0805f308                Town_Tiles
+                0x08060348                Town_Map
+                0x08069948                Town_Hitmap_Tiles
+                0x08069f08                Town_Hitmap_Map
+                0x08073508                Road1_Tiles
+                0x08074548                Road1_Map
+                0x0808a988                Road1_Hitmap_Tiles
+                0x0808af48                Road1_Hitmap_Map
+                0x080a1388                story
+                0x080b8fe8                select
+                0x080b90e8                spurs
+                0x080bc0a0                openning
+                0x080c0bb0                rooster
+                0x080c4a20                digging
+                0x080c6e30                title_Bitmap
+                0x080d0430                title_Palette
+                0x080d0630                fontPal
+ .rodata        0x080d0830      0x384 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfprintf.o)
+ .rodata        0x080d0bb4        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-impure.o)
+                0x080d0bb4                _global_impure_ptr
+ .rodata        0x080d0bb8       0xf0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-locale.o)
+ .rodata        0x080d0ca8       0xa8 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mbtowc_r.o)
+ .rodata        0x080d0d50      0x128 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-mprec.o)
+                0x080d0d60                __mprec_tens
+                0x080d0e28                __mprec_tinytens
+                0x080d0e50                __mprec_bigtens
+ .rodata        0x080d0e78      0x55c /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfiprintf.o)
+                0x080d11dc                __chclass
+                0x080d12dc                __state_table
+                0x080d1348                __action_table
+ .rodata        0x080d13d4      0x104 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-ctype_.o)
+                0x080d13d4                _ctype_
  *all.rodata*(*)
  *(.roda)
  *(.rodata.*)
  .rodata.str1.4
-                0x080d14b0      0x2d2 main.o
-                                0x2f0 (size before relaxing)
- *fill*         0x080d1782        0x2 ff
+                0x080d14d8      0x2e2 main.o
+                                0x300 (size before relaxing)
+ *fill*         0x080d17ba        0x2 ff
  .rodata.str1.4
-                0x080d1784       0x42 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfprintf.o)
+                0x080d17bc       0x42 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfprintf.o)
                                  0x44 (size before relaxing)
- *fill*         0x080d17c6        0x2 ff
+ *fill*         0x080d17fe        0x2 ff
  .rodata.str1.4
-                0x080d17c8       0x10 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-dtoa.o)
+                0x080d1800       0x10 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-dtoa.o)
                                  0x14 (size before relaxing)
  .rodata.str1.4
                 0x00000000        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-impure.o)
  .rodata.str1.4
-                0x080d17d8      0x128 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-locale.o)
+                0x080d1810      0x128 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-locale.o)
                                 0x130 (size before relaxing)
  .rodata.str1.4
                 0x00000000       0x30 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/libg.a(lib_a-svfiprintf.o)
  *(.gnu.linkonce.r*)
-                0x080d1900                . = ALIGN (0x4)
+                0x080d1938                . = ALIGN (0x4)
 
-.rel.dyn        0x080d1900        0x0
+.rel.dyn        0x080d1938        0x0
  .rel.iplt      0x00000000        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/gba_crt0.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
-                0x080d1900                __exidx_start = .
+                0x080d1938                __exidx_start = .
 
 .ARM.exidx
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x080d1900                __exidx_end = .
+                0x080d1938                __exidx_end = .
 
-.ctors          0x080d1900        0x0
+.ctors          0x080d1938        0x0
  *crtbegin.o(.ctors)
  *(EXCLUDE_FILE(*crtend.o) .ctors)
  *(SORT(.ctors.*))
  *(.ctors)
-                0x080d1900                . = ALIGN (0x4)
+                0x080d1938                . = ALIGN (0x4)
 
-.dtors          0x080d1900        0x0
+.dtors          0x080d1938        0x0
  *crtbegin.o(.dtors)
  *(EXCLUDE_FILE(*crtend.o) .dtors)
  *(SORT(.dtors.*))
  *(.dtors)
-                0x080d1900                . = ALIGN (0x4)
+                0x080d1938                . = ALIGN (0x4)
 
-.eh_frame       0x080d1900        0x4
+.eh_frame       0x080d1938        0x4
  *(.eh_frame)
- .eh_frame      0x080d1900        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtbegin.o
- .eh_frame      0x080d1900        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtend.o
-                0x080d1904                . = ALIGN (0x4)
+ .eh_frame      0x080d1938        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtbegin.o
+ .eh_frame      0x080d1938        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtend.o
+                0x080d193c                . = ALIGN (0x4)
 
 .gcc_except_table
-                0x080d1904        0x0
+                0x080d193c        0x0
  *(.gcc_except_table)
-                0x080d1904                . = ALIGN (0x4)
-                0x080d1904                __iwram_lma = .
+                0x080d193c                . = ALIGN (0x4)
+                0x080d193c                __iwram_lma = .
 
-.iwram          0x03000000        0x0 load address 0x080d1904
+.iwram          0x03000000        0x0 load address 0x080d193c
                 0x03000000                __iwram_start__ = ABSOLUTE (.)
  *(.iwram)
  *iwram.*(.text)
                 0x03000000                . = ALIGN (0x4)
                 0x03000000                __iwram_end__ = ABSOLUTE (.)
-                0x080d1904                __data_lma = (__iwram_lma + SIZEOF (.iwram))
+                0x080d193c                __data_lma = (__iwram_lma + SIZEOF (.iwram))
 
 .bss            0x03000000      0x694
                 0x03000000                __bss_start = ABSOLUTE (.)
@@ -701,7 +701,7 @@ Linker script and memory map
                 0x03000694                . = ALIGN (0x4)
                 0x03000694                __bss_end__ = ABSOLUTE (.)
 
-.data           0x03000694      0xb0c load address 0x080d1904
+.data           0x03000694      0xb0c load address 0x080d193c
                 0x03000694                __data_start__ = ABSOLUTE (.)
  *(.data)
  .data          0x03000694        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/gba_crt0.o
@@ -802,53 +802,53 @@ Linker script and memory map
  *(.data.*)
  *(.gnu.linkonce.d*)
                 0x030011a0                . = ALIGN (0x4)
-                0x080d2410                __preinit_lma = (__data_lma + SIZEOF (.data))
+                0x080d2448                __preinit_lma = (__data_lma + SIZEOF (.data))
 
-.igot.plt       0x030011a0        0x0 load address 0x080d2410
+.igot.plt       0x030011a0        0x0 load address 0x080d2448
  .igot.plt      0x00000000        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/../../../../arm-none-eabi/lib/thumb/gba_crt0.o
 
 .tm_clone_table
-                0x030011a0        0x0 load address 0x080d2410
+                0x030011a0        0x0 load address 0x080d2448
  .tm_clone_table
                 0x030011a0        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtbegin.o
  .tm_clone_table
                 0x030011a0        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtend.o
 
-.preinit_array  0x030011a0        0x0 load address 0x080d2410
+.preinit_array  0x030011a0        0x0 load address 0x080d2448
                 0x030011a0                __preinit_array_start = ABSOLUTE (.)
  *(.preinit_array)
                 0x030011a0                __preinit_array_end = ABSOLUTE (.)
-                0x080d2410                __init_lma = (__preinit_lma + SIZEOF (.preinit_array))
+                0x080d2448                __init_lma = (__preinit_lma + SIZEOF (.preinit_array))
 
-.init_array     0x030011a0        0x4 load address 0x080d2410
+.init_array     0x030011a0        0x4 load address 0x080d2448
                 0x030011a0                __init_array_start = ABSOLUTE (.)
  *(SORT(.init_array.*))
  *(.init_array)
  .init_array    0x030011a0        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtbegin.o
                 0x030011a4                __init_array_end = ABSOLUTE (.)
-                0x080d2414                __fini_lma = (__init_lma + SIZEOF (.init_array))
+                0x080d244c                __fini_lma = (__init_lma + SIZEOF (.init_array))
 
-.fini_array     0x030011a4        0x4 load address 0x080d2414
+.fini_array     0x030011a4        0x4 load address 0x080d244c
                 0x030011a4                __fini_array_start = ABSOLUTE (.)
  *(SORT(.fini_array.*))
  *(.fini_array)
  .fini_array    0x030011a4        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtbegin.o
                 0x030011a8                __fini_array_end = ABSOLUTE (.)
-                0x080d2418                __jcr_lma = (__fini_lma + SIZEOF (.fini_array))
+                0x080d2450                __jcr_lma = (__fini_lma + SIZEOF (.fini_array))
 
-.jcr            0x030011a8        0x4 load address 0x080d2418
+.jcr            0x030011a8        0x4 load address 0x080d2450
  *(.jcr)
  .jcr           0x030011a8        0x0 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtbegin.o
  .jcr           0x030011a8        0x4 /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtend.o
                 0x030011ac                __data_end__ = ABSOLUTE (.)
-                0x080d241c                __iwram_overlay_lma = (__jcr_lma + SIZEOF (.jcr))
+                0x080d2454                __iwram_overlay_lma = (__jcr_lma + SIZEOF (.jcr))
                 0x030011ac                __iwram_overlay_start = .
 
-.iwram0         0x030011ac        0x0 load address 0x080d241c
+.iwram0         0x030011ac        0x0 load address 0x080d2454
  *(.iwram0)
                 0x030011ac                . = ALIGN (0x4)
-                0x080d241c                PROVIDE (__load_start_iwram0, LOADADDR (.iwram0))
-                0x080d241c                PROVIDE (__load_stop_iwram0, (LOADADDR (.iwram0) + SIZEOF (.iwram0)))
+                0x080d2454                PROVIDE (__load_start_iwram0, LOADADDR (.iwram0))
+                0x080d2454                PROVIDE (__load_stop_iwram0, (LOADADDR (.iwram0) + SIZEOF (.iwram0)))
 
 .iwram1         0x030011ac        0x0
  *(.iwram1)
@@ -904,15 +904,15 @@ Linker script and memory map
                 0x030011ac                PROVIDE (__load_start_iwram9, LOADADDR (.iwram9))
                 0x030011ac                PROVIDE (__load_stop_iwram9, (LOADADDR (.iwram9) + SIZEOF (.iwram9)))
                 0x030011ac                __iwram_overlay_end = .
-                0x080d241c                __ewram_lma = (__iwram_overlay_lma + (__iwram_overlay_end - __iwram_overlay_start))
+                0x080d2454                __ewram_lma = (__iwram_overlay_lma + (__iwram_overlay_end - __iwram_overlay_start))
                 0x030011ac                __iheap_start = .
                 0x02000000                __ewram_start = ORIGIN (ewram)
 
-.ewram          0x02000000        0x0 load address 0x080d241c
+.ewram          0x02000000        0x0 load address 0x080d2454
  *(.ewram)
                 0x02000000                . = ALIGN (0x4)
                 0x02000000                __ewram_end = ABSOLUTE (.)
-                0x080d241c                __pad_lma = (__ewram_lma + SIZEOF (.ewram))
+                0x080d2454                __pad_lma = (__ewram_lma + SIZEOF (.ewram))
 
 .sbss           0x02000000        0x0
                 0x02000000                __sbss_start__ = ABSOLUTE (.)
@@ -922,11 +922,11 @@ Linker script and memory map
                 0x02000000                __end__ = ABSOLUTE (.)
                 0x02000000                __eheap_start = ABSOLUTE (.)
 
-.pad            0x02000000        0x8 load address 0x080d241c
+.pad            0x02000000        0x8 load address 0x080d2454
                 0x02000000        0x4 LONG 0x52416b64
                 0x02000004        0x4 LONG 0x4d
                 0x02000008                . = ALIGN (0x4)
-                0x080d2424                __rom_end__ = (__pad_lma + SIZEOF (.pad))
+                0x080d245c                __rom_end__ = (__pad_lma + SIZEOF (.pad))
 
 .stab
  *(.stab)
@@ -1018,30 +1018,30 @@ Linker script and memory map
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x9c3e
+.debug_info     0x00000000     0x9d14
  *(.debug_info)
- .debug_info    0x00000000     0x9c3e main.o
+ .debug_info    0x00000000     0x9d14 main.o
 
 .debug_abbrev   0x00000000      0x5e7
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5e7 main.o
 
-.debug_line     0x00000000     0x2356
+.debug_line     0x00000000     0x2386
  *(.debug_line)
- .debug_line    0x00000000     0x2356 main.o
+ .debug_line    0x00000000     0x2386 main.o
 
-.debug_frame    0x00000000      0x8dc
+.debug_frame    0x00000000      0x8e0
  *(.debug_frame)
- .debug_frame   0x00000000      0x8dc main.o
+ .debug_frame   0x00000000      0x8e0 main.o
 
 .debug_str      0x00000000      0xe0c
  *(.debug_str)
  .debug_str     0x00000000      0xe0c main.o
                                 0xeae (size before relaxing)
 
-.debug_loc      0x00000000    0x6d8bc
+.debug_loc      0x00000000    0x6d864
  *(.debug_loc)
- .debug_loc     0x00000000    0x6d8bc main.o
+ .debug_loc     0x00000000    0x6d864 main.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -1212,5 +1212,5 @@ LOAD /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/t
 LOAD /Users/andresaboia/devkitPro/devkitARM/bin/../lib/gcc/arm-none-eabi/4.9.2/thumb/crtn.o
 OUTPUT(/Users/andresaboia/projects/ff_game/ff_game.elf elf32-littlearm)
 
-.debug_ranges   0x00000000     0x2180
- .debug_ranges  0x00000000     0x2180 main.o
+.debug_ranges   0x00000000     0x21b0
+ .debug_ranges  0x00000000     0x21b0 main.o
