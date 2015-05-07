@@ -7,6 +7,14 @@
 #include "Map_Palette.h"
 #include "Maps.h"
 #include "string.h"
+#include "title.h"//////////////////////////////*******************///////////////////////////
+#include "sound.h" //////////////////////////////*******************///////////////////////////
+
+
+#define DUDE_PRIORITY 1 //////////////////////////////*******************///////////////////////////
+
+
+
 
 /* Important hitmap colors */
 #define HITMAP_FARMABLE_COLOR 11 /*((unsigned short*) (0x05000016))*/
@@ -38,6 +46,11 @@ PlantType	cur_plant_sel = PT_TOMATOS;	// current plant selected
 u16				cur_water_level;
 Farmable	farm_list[MAX_FARM_LIST];
 
+char *name[8] = {" ", " ", " ", " ", " ", " ", " ", " "}; //////////////////////////////*******************///////////////////////////
+const int factor_hour = 20;   ////////////////////////******************/////////////////////
+int counter_seconds = 6*20;////////////////////////******************/////////////////////
+
+
 typedef enum sprites_names {
 	CARROT_SMALL, CARROT_MEDIUM, CARROT_BIG, MASHROOM_SMALL, MASHROOM_MEDIUM, MASHROOM_BIG,
 	POTATO_SMALL, POTATO_MEDIUM, POTATO_BIG, TOMATO_SMALL, TOMATO_MEDIUM, TOMATO_BIG,
@@ -67,15 +80,14 @@ Sprite sprites_attributes[]=
 	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,10)| 0, 0	},//ROCK
 };
 
-PT view_center = {112, 64};/////////////////////////////////////////////////
-// PT v_tile_quad[4] = {{12,20},{0,28},{-12,20},{0,20}};
+PT view_center = {112, 64};
 PT v_tile_quad[4] = {{8,26},{8,26},{8,26},{8,26}};
-
 // FUNCTIONS
 
 void updated_farm_position(SpriteHandler *sh){
 	int i;
 	Sprite *obj= &sh->oamBuff[FARM_OAM_OFFSET];
+
 
 	for (i = 0; i < MAX_FARM_LIST; ++i, obj++)
 	{
@@ -90,21 +102,6 @@ void updated_farm_position(SpriteHandler *sh){
 		BFN_SET(obj[0].attribute1, x, ATTR1_X);
 		// BFN_SET(obj[0].attribute0, MODE_NORMAL, ATTR0_MODE);
 	}
-		i = 0;
-		PT A = {FARM_AREA_X<<3, FARM_AREA_Y<<3};
-		PT B = {sh->dude.worldX, sh->dude.worldY};
-		PT H = subPT(A,B);
-		PT P = addPT(view_center, H);
-
-		// u16 x = (P.x ) + ((i%MAX_FARM_W)<<4);
-		// u16 y = (P.y ) + ((i/MAX_FARM_W)<<4);
-
-
-	// char buff[50];
-	// sprintf(buff, "A(%d, %d) B(%d, %d) \n H(%d, %d) P(%d, %d) ", A.x, A.y, B.x, B.y, H.x, H.y, P.x, P.y);
-	// reset_text();
-	// print(4, 3, buff, TILE_ASCI_TRAN);
-
 }
 
 void init_farm_list(SpriteHandler *sh){
@@ -165,7 +162,6 @@ s32 getFarmId(SpriteHandler *sh){
 	return ( (y * MAX_FARM_W) + x ) ;
 }
 
-
 void run_action(TileQuad * cur_tq, SpriteHandler * sh){
 	s32 farm_id = getFarmId(sh);
 	switch(cur_tool_sel){
@@ -217,6 +213,12 @@ TileQuad* getTileQuad(MapHandler*, int, int);
 bool determineMove(MapHandler*, u16);
 unsigned char getPixelColor(MapHandler*, u16, int, int);
 
+/* intro and start */
+void show_enter_name();//////////////////////////////*******************///////////////////////////
+void game_intro();//////////////////////////////*******************///////////////////////////
+void start_menu();//////////////////////////////*******************///////////////////////////
+
+
 /* Main functions */
 ResourcePack* Initialize();
 void LoadContent(ResourcePack*);
@@ -235,6 +237,38 @@ int main() {
 }
 
 ResourcePack* Initialize() {
+	SetMode(4 | BG2_ENABLE);//////////////////////////////*******************///////////////////////////
+
+	int x,y;//////////////////////////////*******************///////////////////////////
+
+	memcpy(paletteMem, title_Palette, 256);//////////////////////////////*******************///////////////////////////
+	for(x = 0; x < 240; x++)//////////////////////////////*******************///////////////////////////
+		for(y = 0; y < 160; y++)//////////////////////////////*******************///////////////////////////
+			drawPixel4(x,y, title_Bitmap[y*240+x]);//////////////////////////////*******************///////////////////////////
+
+	while(1)//////////////////////////////*******************///////////////////////////
+	{
+		keyPoll();//////////////////////////////*******************///////////////////////////
+
+		if(keyHit(BUTTON_START)){//////////////////////////////*******************///////////////////////////
+			break;//////////////////////////////*******************///////////////////////////
+		}//////////////////////////////*******************///////////////////////////
+	}//////////////////////////////*******************///////////////////////////
+
+	/* Set Mode */
+    SetMode(0 | BG0_ENABLE);//////////////////////////////*******************///////////////////////////
+
+	init_text();//////////////////////////////*******************///////////////////////////
+	game_intro();//////////////////////////////*******************///////////////////////////
+
+	//Define some interrupts. I still dont know why/
+	//REG_IME = 0x00;//////////////////////////////*******************///////////////////////////
+	//REG_INTERRUPT = (u32)MyHandler;//////////////////////////////*******************///////////////////////////
+	//REG_IE |= INT_VBLANK;//////////////////////////////*******************///////////////////////////
+	//REG_DISPSTAT |= 0x08;//////////////////////////////*******************///////////////////////////
+	//REG_IME = 0x01;
+
+
 
 	/* Set Mode */
     SetMode(0 | BG0_ENABLE | BG1_ENABLE | BG2_ENABLE | BG3_ENABLE);
@@ -248,12 +282,12 @@ ResourcePack* Initialize() {
 
 	/* Ground */
 	pResources->mh1 = (MapHandler*) malloc(sizeof(MapHandler));
-    REG_BG1CNT = BG_COLOR256 | TEXTBG_SIZE_256x256 | (15 << SCREEN_SHIFT) | (1 << CHAR_SHIFT);
+    REG_BG1CNT = BG_COLOR256 | TEXTBG_SIZE_256x256 | (15 << SCREEN_SHIFT) | (1 << CHAR_SHIFT) | 2; //////////////////***********************////////////////////
     pResources->mh1->bg = (unsigned short*) screenBaseBlock(15);
 
 	/* Water */
     pResources->mh2 = (MapHandler*) malloc(sizeof(MapHandler));
-    REG_BG2CNT = BG_COLOR256 | TEXTBG_SIZE_256x256 | (23 << SCREEN_SHIFT) | (2 << CHAR_SHIFT);
+    REG_BG2CNT = BG_COLOR256 | TEXTBG_SIZE_256x256 | (23 << SCREEN_SHIFT) | (2 << CHAR_SHIFT) | 2; //////////////////***********************////////////////////
 	pResources->mh2->bg = (unsigned short*) screenBaseBlock(23);
     pResources->mh2->x = 0;
     pResources->mh2->y = 0;
@@ -274,7 +308,7 @@ ResourcePack* Initialize() {
 
 	/* Hitmap */
 	pResources->mh3 = (MapHandler*) malloc(sizeof(MapHandler));
-    REG_BG3CNT = BG_COLOR256 | TEXTBG_SIZE_256x256 | (31 << SCREEN_SHIFT) | (3 << CHAR_SHIFT);
+    REG_BG3CNT = BG_COLOR256 | TEXTBG_SIZE_256x256 | (31 << SCREEN_SHIFT) | (3 << CHAR_SHIFT) | 2; //////////////////***********************///////////////////
 	pResources->mh3->bg = (unsigned short*) screenBaseBlock(31);
 
     /* Turn on timer0, set to 256 clocks */
@@ -296,6 +330,170 @@ ResourcePack* Initialize() {
 
 	return pResources;
 }
+
+
+//////////////////////////////*******************///////////////////////////
+//////////////////////////////*******************///////////////////////////
+
+void show_enter_name(){
+
+	draw_box(18, TILE_ASCI_OPAC);
+	print(8, 2, "Enter Your Name", TILE_ASCI_OPAC);
+
+	print(4, 6, "A   B   C   D   E   F", TILE_ASCI_OPAC);
+	print(4, 8, "G   H   I   J   K   L", TILE_ASCI_OPAC);
+	print(4, 10, "M   N   O   P   Q   R", TILE_ASCI_OPAC);
+	print(4, 12, "S   T   U   V   W   X", TILE_ASCI_OPAC);
+	print(4, 14, "Y   X   %   $   &   END", TILE_ASCI_OPAC);
+	print(4, 17, "__", TILE_ASCI_OPAC);
+
+	const char *letters[5][6] = {{"A", "B", "C", "D", "E", "F"},
+						          {"G", "H", "I", "J", "K", "L"},
+							      {"M", "N", "O", "P", "Q", "R"},
+								  {"S", "T", "U", "V", "W", "X"},
+								  {"Y", "X", "%", "$", "&", "*"}};
+
+	int x = 0, y = 0, pos_name = 0;
+	print(x*4+2,y*2+6,">>", TILE_ASCI_OPAC);
+
+	while(1){
+		keyPoll();
+
+		if(keyHit(BUTTON_DOWN) && y < 4){
+			print(x*4+2,y*2+6,"  ", TILE_ASCI_OPAC);
+			y++;
+			print(x*4+2,y*2+6,">>", TILE_ASCI_OPAC);
+
+		}else if(keyHit(BUTTON_UP) && y > 0){
+			print(x*4+2,y*2+6,"  ", TILE_ASCI_OPAC);
+			y--;
+			print(x*4+2,y*2+6,">>", TILE_ASCI_OPAC);
+
+		}else if(keyHit(BUTTON_RIGHT) && x < 5){
+			print(x*4+2,y*2+6,"  ", TILE_ASCI_OPAC);
+			x++;
+			print(x*4+2,y*2+6,">>", TILE_ASCI_OPAC);
+
+		}else if(keyHit(BUTTON_LEFT) && x > 0){
+			print(x*4+2,y*2+6,"  ", TILE_ASCI_OPAC);
+			x--;
+			print(x*4+2,y*2+6,">>", TILE_ASCI_OPAC);
+
+		}else if(keyHit(BUTTON_A)){
+
+			if(x == 5 && y == 4){
+
+				break;
+			}else if(pos_name < 8){
+				name[pos_name] = letters[y][x];
+				print(4+2+pos_name, 17, letters[y][x], TILE_ASCI_OPAC);
+				pos_name++;
+			}
+
+		}else if(keyHit(KEY_B) && pos_name > 0){
+			pos_name--;
+			print(4+2+pos_name, 17, " ", TILE_ASCI_OPAC);
+		}
+	}
+}
+
+void game_intro(){
+
+	show_enter_name();
+
+	char conc_text[61];
+	sprintf (conc_text, "%c%c%c%c%c%c%c%c, now it's your turn to work and make the farm thrive", *name[0], *name[1], *name[2], *name[3], *name[4], *name[5], *name[6], *name[7]);
+
+	print_story(4, "Life was not always easy. There was a time in Nebraska where only the strong survived.",
+	               "Everyone chooses their own path. In the Old West your success will depend only on you.",
+	               "Your father unfortunately passed away and now you own the small ranch that with so much sweat and strength once he cultivated.",
+	               conc_text);
+}
+
+void start_menu(){
+
+	draw_box(18, TILE_ASCI_OPAC);
+	print(10, 2, "Inventory", TILE_ASCI_OPAC);
+
+	char str[] = "a"; str[0]=137;
+	print(4, 6, str, TILE_ASCI_OPAC);
+	print(6, 6, "Axe", TILE_ASCI_OPAC);
+
+	str[0]=138;
+	print(4, 9, str, TILE_ASCI_OPAC);
+	print(6, 9, "Hammer", TILE_ASCI_OPAC);
+
+	str[0]=139;
+	print(4, 12, str, TILE_ASCI_OPAC);
+	print(6, 12, "Hoe", TILE_ASCI_OPAC);
+
+	str[0]=140;
+	print(15, 6, str, TILE_ASCI_OPAC);
+	str[0]=141;
+	print(16, 6, str, TILE_ASCI_OPAC);
+	str[0]=142;
+	print(15, 7, str, TILE_ASCI_OPAC);
+	str[0]=143;
+	print(16, 7, str, TILE_ASCI_OPAC);
+	print(18, 6, "Seeds", TILE_ASCI_OPAC);
+	print(22, 7, "9", TILE_ASCI_OPAC);
+
+	str[0]=144;
+	print(15, 9, str, TILE_ASCI_OPAC);
+	str[0]=145;
+	print(16, 9, str, TILE_ASCI_OPAC);
+	str[0]=146;
+	print(15, 10, str, TILE_ASCI_OPAC);
+	str[0]=147;
+	print(16, 10, str, TILE_ASCI_OPAC);
+	print(18, 9, "Water", TILE_ASCI_OPAC);
+	print(22, 10, "3", TILE_ASCI_OPAC);
+
+	print(20, 16, "$140", TILE_ASCI_OPAC);
+
+
+	ToolType tool[2][3] = {{TT_AXE,TT_HAMMER, TT_HOE},{TT_SEEDS,TT_WATER,TT_EMPTY}};
+
+	int x = 0, y = 0, pos_name = 0;
+	print(x*11+2,y*3+6,">>", TILE_ASCI_OPAC);
+
+	while(1){
+		keyPoll();
+
+		if(keyHit(BUTTON_DOWN) && y < 2){
+			print(x*11+2,y*3+6,"  ", TILE_ASCI_OPAC);
+			y++;
+			print(x*11+2,y*3+6,">>", TILE_ASCI_OPAC);
+
+		}else if(keyHit(BUTTON_UP) && y > 0){
+			print(x*11+2,y*3+6,"  ", TILE_ASCI_OPAC);
+			y--;
+			print(x*11+2,y*3+6,">>", TILE_ASCI_OPAC);
+
+		}else if(keyHit(BUTTON_RIGHT) && x < 1){
+			print(x*11+2,y*3+6,"  ", TILE_ASCI_OPAC);
+			x++;
+			print(x*11+2,y*3+6,">>", TILE_ASCI_OPAC);
+
+		}else if(keyHit(BUTTON_LEFT) && x > 0){
+			print(x*11+2,y*3+6,"  ", TILE_ASCI_OPAC);
+			x--;
+			print(x*11+2,y*3+6,">>", TILE_ASCI_OPAC);
+
+		}else if(keyHit(BUTTON_A)){
+			break;
+		}
+	}
+
+	cur_tool_sel = tool[x][y];
+	reset_text();
+
+}
+
+//////////////////////////////*******************///////////////////////////
+//////////////////////////////*******************///////////////////////////
+//////////////////////////////*******************///////////////////////////
+
 
 void LoadContent(ResourcePack* pResources) {
 	/* Load initial region (ground + hitmap) */
@@ -321,7 +519,10 @@ void Update(ResourcePack* pResources) {
 	updated_farm_position(&pResources->sh);
 
 	keyPoll();
-	if(keyIsDown(BUTTON_UP)) {
+	if(keyIsDown(BUTTON_START)){//////////////////////////////*******************///////////////////////////
+		start_menu();//////////////////////////////*******************///////////////////////////
+
+	}if(keyIsDown(BUTTON_UP)) {
 		if(dude_update(pResources)) {
 			/* Move up */
 			/* Check if next tile is portal */
@@ -454,9 +655,9 @@ void Update(ResourcePack* pResources) {
 		run_action(tq, &pResources->sh);
 
 
-    // sprintf(buff, "%d %d %d %d %d %d", tq->tlX, tq->tlY, tq->tl, tq->tr, tq->bl, tq->br);
-		// reset_text();
-		// print(3, 3, buff, TILE_ASCI_TRAN);
+        //sprintf(buff, "%d %d %d %d %d %d", tq->tlX, tq->tlY, tq->tl, tq->tr, tq->bl, tq->br);
+		//reset_text();
+		//print(3, 3, buff, TILE_ASCI_TRAN);
 	} else if(keyHit(BUTTON_B)) {
 		if(gameState == (HOME + HOME_OUTSIDE)) {
 			gameState = ROAD1;
@@ -484,7 +685,13 @@ void Update(ResourcePack* pResources) {
 
     free(tq);
 
+
+
     if(last_timers[1] != my_timers[1]) {
+
+		sprintf(buff, "%2d:00 h", counter_seconds/factor_hour);////////////////////////////******************///////////////////////////
+		print(16, 18, buff, TILE_ASCI_TRAN);////////////////////////////******************///////////////////////////
+
 		/* Move water */
   		if(counter_seconds % 2 == 0) {
 			pResources->mh2->x += 2;
@@ -498,7 +705,7 @@ void Update(ResourcePack* pResources) {
 			}
 		}
 		/* Day/Night cycle */
-    	if(counter_seconds > 16 && counter_seconds <= 20){
+    	if(counter_seconds/factor_hour > 16 && counter_seconds/factor_hour <= 20){
             for(i = 0; i < 256; i++){
                 if(Map_Palette[i] > 0){
                     mask = (1<<6)-1;
@@ -508,7 +715,7 @@ void Update(ResourcePack* pResources) {
 			         (((int)(((BGPaletteMem[i]>>10)&mask)*fat))<<10);
                 }
 			}
-   	    } else if(counter_seconds > 1 && counter_seconds <= 5){
+   	    } else if(counter_seconds/factor_hour > 1 && counter_seconds/factor_hour <= 5){
             for(i = 0; i < 256; i++){
                 if(Map_Palette[i] > 0){
                     mask = (1<<6)-1;
@@ -523,9 +730,11 @@ void Update(ResourcePack* pResources) {
 	    last_timers[1] = my_timers[1];
 
         counter_seconds++;
-        if(counter_seconds == 7){
+
+
+        if(counter_seconds/factor_hour == 7){
             DMAFastCopy((void*) Map_Palette, (void*) BGPaletteMem, 256, DMA_16NOW);
-        } else if(counter_seconds > 24){
+        } else if(counter_seconds/factor_hour > 24){
             counter_seconds = 0;
         }
 	}
@@ -931,7 +1140,7 @@ void dude_ani_stand(SpriteCharacter *dude){
 	BFN_SET(obj[0].attribute0, pt.y, ATTR0_Y);
 	BFN_SET(obj[0].attribute1, pt.x, ATTR1_X);
 	BFN_SET(obj[0].attribute1,    0, ATTR1_FLIP);
-	obj[0].attribute2 = id_stand[dir] | 0;
+	obj[0].attribute2 = id_stand[dir] | DUDE_PRIORITY << 10;   ////////////////////////////////////****************************/////////////////////////
 	if(dir == LOOK_LEFT) obj[0].attribute1 |= HORIZONTAL_FLIP;
 
 }
@@ -944,7 +1153,7 @@ void dude_ani_walk(SpriteCharacter *dude){
 	BFN_SET(obj[0].attribute0, pt.y, ATTR0_Y);
 	BFN_SET(obj[0].attribute1, pt.x, ATTR1_X);
 	BFN_SET(obj[0].attribute1,    0, ATTR1_FLIP);
-	obj[0].attribute2 = id_walk[dir][(frame)] |  0;
+	obj[0].attribute2 = id_walk[dir][(frame)] |  DUDE_PRIORITY << 10; ////////////////////////////////////****************************/////////////////////////s
 	if(dir == LOOK_LEFT) obj[0].attribute1 |= HORIZONTAL_FLIP;
 
 }

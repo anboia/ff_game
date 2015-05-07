@@ -21,7 +21,15 @@ main.o: /Users/andresaboia/projects/ff_game/main.c \
  /Users/andresaboia/projects/ff_game/Water.h \
  /Users/andresaboia/projects/ff_game/Other_Farm1.h \
  /Users/andresaboia/projects/ff_game/Other_Farm2.h \
- /Users/andresaboia/projects/ff_game/Other_Farm3.h
+ /Users/andresaboia/projects/ff_game/Other_Farm3.h \
+ /Users/andresaboia/projects/ff_game/title.h \
+ /Users/andresaboia/projects/ff_game/sound.h \
+ /Users/andresaboia/projects/ff_game/sound_digging.h \
+ /Users/andresaboia/projects/ff_game/sound_rooster.h \
+ /Users/andresaboia/projects/ff_game/sound_openning.h \
+ /Users/andresaboia/projects/ff_game/sound_spurs.h \
+ /Users/andresaboia/projects/ff_game/sound_select.h \
+ /Users/andresaboia/projects/ff_game/sound_story.h
 
 /Users/andresaboia/projects/ff_game/gba_helper.h:
 
@@ -68,3 +76,19 @@ main.o: /Users/andresaboia/projects/ff_game/main.c \
 /Users/andresaboia/projects/ff_game/Other_Farm2.h:
 
 /Users/andresaboia/projects/ff_game/Other_Farm3.h:
+
+/Users/andresaboia/projects/ff_game/title.h:
+
+/Users/andresaboia/projects/ff_game/sound.h:
+
+/Users/andresaboia/projects/ff_game/sound_digging.h:
+
+/Users/andresaboia/projects/ff_game/sound_rooster.h:
+
+/Users/andresaboia/projects/ff_game/sound_openning.h:
+
+/Users/andresaboia/projects/ff_game/sound_spurs.h:
+
+/Users/andresaboia/projects/ff_game/sound_select.h:
+
+/Users/andresaboia/projects/ff_game/sound_story.h:

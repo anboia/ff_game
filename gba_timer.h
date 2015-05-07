@@ -21,6 +21,5 @@
 
 int my_timers[4];
 int last_timers[4];
-int counter_seconds = 6;
 
 void updateTimers();
