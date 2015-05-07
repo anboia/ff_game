@@ -29,6 +29,7 @@
 #define MAX_FARM_W 10
 #define MAX_FARM_H 10
 #define MAX_FARM_LIST (MAX_FARM_W*MAX_FARM_H)
+#define PRI_FARM 1<<11
 
 // start x, y position (tile format)
 #define FARM_AREA_X 28
@@ -38,17 +39,22 @@
 #define FARM_OAM_OFFSET 27
 
 // GLOBALS
-Farmable	cur_plant;			// init with .state = FS_EMPTY
+Farmable	cur_plant_holding;			// init with .state = FS_EMPTY
 
 ToolType	cur_tool_sel = TT_SEEDS;		// current tool selected
 PlantType	cur_plant_sel = PT_TOMATOS;	// current plant selected
 
+
 u16				cur_water_level;
 Farmable	farm_list[MAX_FARM_LIST];
 
+int plant_age[4] = {1,1,1,1};
+
+
 char *name[8] = {" ", " ", " ", " ", " ", " ", " ", " "}; //////////////////////////////*******************///////////////////////////
-const int factor_hour = 20;   ////////////////////////******************/////////////////////
-int counter_seconds = 6*20;////////////////////////******************/////////////////////
+int factor_hour = 6<<8;   ////////////////////////******************/////////////////////
+int counter_seconds = 6;////////////////////////******************/////////////////////
+int counter_seconds_before = 5;
 
 
 typedef enum sprites_names {
@@ -57,32 +63,36 @@ typedef enum sprites_names {
 	SEEDS, BARREL, IRRIGATOR, TREE, BRANCH, GRASS, ROCK,
 } sprites_names;
 
+
+
 Sprite sprites_attributes[]=
 {
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,0)| 0, 0	},//CARROT_SMALL
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,2)| 0, 0	},//CARROT_MEDIUM
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,4)| 0, 0	},//CARROT_BIG
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,0)| 0, 0	},//MASHROOM_SMALL
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,2)| 0, 0	},//MASHROOM_MEDIUM
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,4)| 0, 0	},//MASHROOM_BIG
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10,0)| 0, 0	},//POTATO_SMALL
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10,2)| 0, 0	},//POTATO_MEDIUM
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10,4)| 0, 0	},//POTATO_BIG
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(12,0)| 0, 0	},//TOMATO_SMALL
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(12,2)| 0, 0	},//TOMATO_MEDIUM
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4,12)| 0, 0	},//*TOMATO_BIG
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(0,14)| 0, 0	},//*SEEDS
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(14,2)| 0, 0	},//BARREL
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4,14)| 0, 0	},//IRRIGATOR
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_64, TID_2D(6,6) | 0, 0	},//TREE
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,10)| 0, 0	},//BRANCH
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,12)| 0, 0	},//GRASS
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,10)| 0, 0	},//ROCK
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(0 , 6)| PRI_FARM, 0	},//CARROT_SMALL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(2 , 6)| PRI_FARM, 0	},//CARROT_MEDIUM
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4 , 6)| PRI_FARM, 0	},//CARROT_BIG
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(0 , 8)| PRI_FARM, 0	},//MASHROOM_SMALL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(2 , 8)| PRI_FARM, 0	},//MASHROOM_MEDIUM
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4 , 8)| PRI_FARM, 0	},//MASHROOM_BIG
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(0 ,10)| PRI_FARM, 0	},//POTATO_SMALL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(2 ,10)| PRI_FARM, 0	},//POTATO_MEDIUM
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4 ,10)| PRI_FARM, 0	},//POTATO_BIG
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(0 ,12)| PRI_FARM, 0	},//TOMATO_SMALL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(2 ,12)| PRI_FARM, 0	},//TOMATO_MEDIUM
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4 ,12)| PRI_FARM, 0	},//TOMATO_BIG
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(0 ,14)| PRI_FARM, 0	},//SEEDS
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(2 ,14)| PRI_FARM, 0	},//BARREL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(14, 4)| PRI_FARM, 0	},//IRRIGATOR
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_64, TID_2D(6 , 6)| PRI_FARM, 0},//TREE
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10, 6)| PRI_FARM, 0	},//BRANCH
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(12, 6)| PRI_FARM, 0	},//GRASS
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10, 8)| PRI_FARM, 0	},//ROCK
 };
 
 PT view_center = {112, 64};
 PT v_tile_quad[4] = {{8,26},{8,26},{8,26},{8,26}};
 // FUNCTIONS
+
+
 
 void updated_farm_position(SpriteHandler *sh){
 	int i;
@@ -100,7 +110,9 @@ void updated_farm_position(SpriteHandler *sh){
 		u16 y = (P.y ) + ((i/MAX_FARM_W)<<4);
 		BFN_SET(obj[0].attribute0, y, ATTR0_Y);
 		BFN_SET(obj[0].attribute1, x, ATTR1_X);
-		// BFN_SET(obj[0].attribute0, MODE_NORMAL, ATTR0_MODE);
+
+		if(farm_list[i].state == FS_EMPTY)
+			BFN_SET(obj[0].attribute0, MODE_TRANSPARENT, ATTR0_MODE);
 	}
 }
 
@@ -121,6 +133,7 @@ void init_farm_list(SpriteHandler *sh){
 		BFN_SET(obj[0].attribute1, x, ATTR1_X);
 		// BFN_SET(obj[0].attribute0, MODE_NORMAL, ATTR0_MODE);
 	}
+	cur_plant_holding.type = FS_EMPTY;
 }
 
 void update_sprite_id(u32 id, SpriteHandler *sh){
@@ -150,10 +163,10 @@ s32 getFarmId(SpriteHandler *sh){
 	int x = ( (P.x>>3) - FARM_AREA_X)/2;
 	int y = ( (P.y>>3) - FARM_AREA_Y)/2;
 
-	char buff[50];
-	sprintf(buff, "B(%d, %d)\nP(%d, %d) \nx,y(%d, %d)\nstate:%d ", B.x, B.y, P.x, P.y, x, y, sh->dude.dir);
-	reset_text();
-	print(3, 3, buff, TILE_ASCI_TRAN);
+	// char buff[50];
+	// sprintf(buff, "B(%d, %d)\nP(%d, %d) \nx,y(%d, %d)\nstate:%d ", B.x, B.y, P.x, P.y, x, y, sh->dude.dir);
+	// reset_text();
+	// print(3, 3, buff, TILE_ASCI_TRAN);
 
 
 	if(x<0 || x>=10 || y<0 || y>=10){
@@ -164,8 +177,22 @@ s32 getFarmId(SpriteHandler *sh){
 
 void run_action(TileQuad * cur_tq, SpriteHandler * sh){
 	s32 farm_id = getFarmId(sh);
+	// char buff[50];
 	switch(cur_tool_sel){
 		case TT_EMPTY:
+
+
+
+			if(farm_list[farm_id].state == FS_BIG && ID_OK(farm_id) ){
+				cur_plant_holding = farm_list[farm_id];
+
+				farm_list[farm_id].state 	= FS_EMPTY;
+				update_sprite_id(farm_id, sh);
+// sprintf(buff, "TT_EMPTY - %d", farm_id);
+// reset_text();
+// print(3, 3, buff, TILE_ASCI_TRAN);
+			}
+
 			break;
 		case TT_SEEDS:
 			if(farm_list[farm_id].state == FS_EMPTY && ID_OK(farm_id) )
@@ -173,7 +200,7 @@ void run_action(TileQuad * cur_tq, SpriteHandler * sh){
 				farm_list[farm_id].state 	= FS_SEEDS;
 				farm_list[farm_id].type 	= cur_plant_sel;
 				farm_list[farm_id].age 		= 0;
-				farm_list[farm_id].water 	= 0;
+				farm_list[farm_id].water 	= 1;
 				update_sprite_id(farm_id, sh);
 			}
 			break;
@@ -185,6 +212,43 @@ void run_action(TileQuad * cur_tq, SpriteHandler * sh){
 			break;
 		case TT_HOE:
 			break;
+	}
+}
+
+
+
+void another_day(SpriteHandler * sh){
+	int i;
+	// Sprite *obj= &sh->oamBuff[FARM_OAM_OFFSET];
+
+	for (i = 0; i < MAX_FARM_LIST; ++i){
+		if(farm_list[i].state!=FS_EMPTY){
+			if(farm_list[i].water){
+				farm_list[i].age++;
+				// farm_list[i].water = 0;
+			}
+			else {
+				farm_list[i].noWaterDays++;
+			}
+
+			// if no water for a long time, plant dies
+			if(farm_list[i].noWaterDays>=2){
+				farm_list[i].state = FS_EMPTY;
+				update_sprite_id(i, sh);
+			}
+			if(farm_list[i].state == FS_SEEDS && farm_list[i].age > plant_age[farm_list[i].type]){
+				farm_list[i].state = FS_SMALL;
+				update_sprite_id(i, sh);
+			}
+			if(farm_list[i].state == FS_SMALL && farm_list[i].age > plant_age[farm_list[i].type]*2){
+				farm_list[i].state = FS_MED;
+				update_sprite_id(i, sh);
+			}
+			if(farm_list[i].state == FS_MED && farm_list[i].age > plant_age[farm_list[i].type]*3){
+				farm_list[i].state = FS_BIG;
+				update_sprite_id(i, sh);
+			}
+		}
 	}
 }
 
@@ -240,35 +304,34 @@ ResourcePack* Initialize() {
 	SetMode(4 | BG2_ENABLE);//////////////////////////////*******************///////////////////////////
 
 	int x,y;//////////////////////////////*******************///////////////////////////
+/*/
+	memcpy(paletteMem, title_Palette, 256);////////////////////////////////////////////////////////
+	for(x = 0; x < 240; x++)//////////////////////////////////////////////////////
+		for(y = 0; y < 160; y++)///////////////////////////////////////////////////////
+			drawPixel4(x,y, title_Bitmap[y*240+x]);//////////////////////////////////////////////////
 
-	memcpy(paletteMem, title_Palette, 256);//////////////////////////////*******************///////////////////////////
-	for(x = 0; x < 240; x++)//////////////////////////////*******************///////////////////////////
-		for(y = 0; y < 160; y++)//////////////////////////////*******************///////////////////////////
-			drawPixel4(x,y, title_Bitmap[y*240+x]);//////////////////////////////*******************///////////////////////////
-
-	while(1)//////////////////////////////*******************///////////////////////////
+	while(1)////////////////////////////////////////////////////////
 	{
-		keyPoll();//////////////////////////////*******************///////////////////////////
+		keyPoll();////////////////////////////////////////////////////////
 
-		if(keyHit(BUTTON_START)){//////////////////////////////*******************///////////////////////////
-			break;//////////////////////////////*******************///////////////////////////
-		}//////////////////////////////*******************///////////////////////////
-	}//////////////////////////////*******************///////////////////////////
+		if(keyHit(BUTTON_START)){//////////////////////////////////////////////////////
+			break;//////////////////////////////////////////////////////
+		}/////////////////////////////////////////////////////
+	}/////////////////////////////////////////////////////
 
-	/* Set Mode */
-    SetMode(0 | BG0_ENABLE);//////////////////////////////*******************///////////////////////////
+  SetMode(0 | BG0_ENABLE);//////////////////////////////////////////////////////
 
-	init_text();//////////////////////////////*******************///////////////////////////
-	game_intro();//////////////////////////////*******************///////////////////////////
+	init_text();///////////////////////////////////////////////////////
+	game_intro();///////////////////////////////////////////////////////
 
 	//Define some interrupts. I still dont know why/
-	//REG_IME = 0x00;//////////////////////////////*******************///////////////////////////
-	//REG_INTERRUPT = (u32)MyHandler;//////////////////////////////*******************///////////////////////////
-	//REG_IE |= INT_VBLANK;//////////////////////////////*******************///////////////////////////
-	//REG_DISPSTAT |= 0x08;//////////////////////////////*******************///////////////////////////
+	//REG_IME = 0x00;/////////////////////////////////////////////////////
+	//REG_INTERRUPT = (u32)MyHandler;//////////////////////////////////////////////////////
+	//REG_IE |= INT_VBLANK;//////////////////////////////////////////////////////
+	//REG_DISPSTAT |= 0x08;/////////////////////////////////////////////////
 	//REG_IME = 0x01;
 
-
+//*/
 
 	/* Set Mode */
     SetMode(0 | BG0_ENABLE | BG1_ENABLE | BG2_ENABLE | BG3_ENABLE);
@@ -448,6 +511,8 @@ void start_menu(){
 	print(16, 10, str, TILE_ASCI_OPAC);
 	print(18, 9, "Water", TILE_ASCI_OPAC);
 	print(22, 10, "3", TILE_ASCI_OPAC);
+
+	print(18, 12, "Nothing", TILE_ASCI_OPAC);
 
 	print(20, 16, "$140", TILE_ASCI_OPAC);
 
@@ -689,7 +754,8 @@ void Update(ResourcePack* pResources) {
 
     if(last_timers[1] != my_timers[1]) {
 
-		sprintf(buff, "%2d:00 h", counter_seconds/factor_hour);////////////////////////////******************///////////////////////////
+
+		sprintf(buff, "%2d:00 h", counter_seconds);////////////////////////////******************///////////////////////////
 		print(16, 18, buff, TILE_ASCI_TRAN);////////////////////////////******************///////////////////////////
 
 		/* Move water */
@@ -705,7 +771,9 @@ void Update(ResourcePack* pResources) {
 			}
 		}
 		/* Day/Night cycle */
-    	if(counter_seconds/factor_hour > 16 && counter_seconds/factor_hour <= 20){
+		if(counter_seconds != counter_seconds_before){
+
+    	if(counter_seconds > 16 && counter_seconds <= 20){
             for(i = 0; i < 256; i++){
                 if(Map_Palette[i] > 0){
                     mask = (1<<6)-1;
@@ -715,7 +783,7 @@ void Update(ResourcePack* pResources) {
 			         (((int)(((BGPaletteMem[i]>>10)&mask)*fat))<<10);
                 }
 			}
-   	    } else if(counter_seconds/factor_hour > 1 && counter_seconds/factor_hour <= 5){
+   	    } else if(counter_seconds > 1 && counter_seconds <= 5){
             for(i = 0; i < 256; i++){
                 if(Map_Palette[i] > 0){
                     mask = (1<<6)-1;
@@ -727,15 +795,20 @@ void Update(ResourcePack* pResources) {
             }
 	    }
 
+			counter_seconds_before = counter_seconds;
+		}
+
 	    last_timers[1] = my_timers[1];
 
-        counter_seconds++;
+	    	#define TIME_SPEED 0x0010
+        factor_hour+=TIME_SPEED;
+        counter_seconds = (factor_hour >> 8);
 
-
-        if(counter_seconds/factor_hour == 7){
+        if(counter_seconds == 7){
             DMAFastCopy((void*) Map_Palette, (void*) BGPaletteMem, 256, DMA_16NOW);
-        } else if(counter_seconds/factor_hour > 24){
-            counter_seconds = 0;
+        } else if(counter_seconds > 24){
+           counter_seconds = factor_hour = 0;
+           another_day(&pResources->sh);
         }
 	}
 
