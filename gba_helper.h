@@ -1,0 +1,9 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include "gba_types.h"
+#include "gba_math.h"
+#include "gba_buttons.h"
+#include "gba_graphics.h"
+#include "gba_map.h"
+#include "gba_sprite.h"
+#include "gba_timer.h"
