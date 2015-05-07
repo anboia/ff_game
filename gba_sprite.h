@@ -11,7 +11,7 @@
 #define OBJ_MAP_2D 0x0
 #define OBJ_ENABLE 0x1000
 
-#define TID_2D(i,j) ((i<<5)+j)
+#define TID_2D(i,j) ((i<<5)+(j<<1))
 
 /* Attribute 0 */
 #define MODE_NORMAL				 0				// Regular object
@@ -28,10 +28,6 @@
 #define WIDE							0x4000		// Tall shape (height &gt; width)
 #define TALL							0x8000		// Wide shape (height &lt; width)
 
-#define ATTR0_Y_MASK		0x00FF
-#define ATTR0_Y_SHIFT			 0
-#define ATTR0_Y(n)			((n)<<ATTR0_Y_SHIFT)
-
 
 /* Attribute 1 */
 #define ROTDATA(n) ((n) << 9)
@@ -41,14 +37,6 @@
 #define SIZE_16		0x4000
 #define SIZE_32		0x8000
 #define SIZE_64		0xC000
-
-#define ATTR1_X_MASK		0x01FF
-#define ATTR1_X_SHIFT			 0
-#define ATTR1_X(n)			((n)<<ATTR1_X_SHIFT)
-
-#define ATTR1_FLIP_MASK		0x3000
-#define ATTR1_FLIP_SHIFT		12
-#define ATTR1_FLIP(n)		((n)<<ATTR1_FLIP_SHIFT)
 
 /* Attribute 2 */
 #define PRIORITY(n) ((n) << 10)

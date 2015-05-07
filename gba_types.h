@@ -105,7 +105,7 @@ typedef struct ResourcePack {
 	MapHandler* mh2;
 	/* Hitmap */
 	MapHandler* mh3;
-    
+
 	Portal* portals;
 
 	/* Sprites */
@@ -116,4 +116,34 @@ typedef struct ResourcePack {
 typedef struct TileQuad {
 	/* 8x8 tiles Top Left, Top Right, Bottom Left, Bottom Right */
 	unsigned short tl, tr, bl, br;
+	int tlX, tlY;
 } TileQuad;
+
+
+
+
+//------------------------------add1
+typedef enum ToolType
+{
+	TT_EMPTY = 0, TT_SEEDS, TT_WATER, TT_AXE, TT_HAMMER, TT_HOE,
+} ToolType;
+
+typedef enum FarmState
+{
+	FS_EMPTY = 0, FS_SEEDS, FS_SMALL, FS_MED, FS_BIG,
+} FarmState;
+
+typedef enum PlantType
+{
+	PT_CARROT = 0, PT_MUSHROOM, PT_POTATO, PT_TOMATOS, //PT_ONIONS, PT_MELONS,
+} PlantType;
+
+typedef struct Farmable{
+	FarmState state;
+	PlantType type;
+	u16 age;
+	bool water;
+	u16 noWaterDays;
+} Farmable;
+
+//------------------------------end_add1

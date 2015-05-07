@@ -13,6 +13,192 @@
 #define HITMAP_PORTAL_COLOR 12 /*((unsigned short*) (0x05000018))*/
 #define HITMAP_WATER_COLOR 14 /*((unsigned short*) (0x0500001C))*/
 
+
+
+//------------------------------add1
+// DEFINES
+#define WATER_FULL 9
+#define MAX_FARM_W 10
+#define MAX_FARM_H 10
+#define MAX_FARM_LIST (MAX_FARM_W*MAX_FARM_H)
+
+// start x, y position (tile format)
+#define FARM_AREA_X 28
+#define FARM_AREA_Y 72
+
+#define ID_OK(id) (id > -1)
+#define FARM_OAM_OFFSET 27
+
+// GLOBALS
+Farmable	cur_plant;			// init with .state = FS_EMPTY
+
+ToolType	cur_tool_sel = TT_SEEDS;		// current tool selected
+PlantType	cur_plant_sel = PT_TOMATOS;	// current plant selected
+
+u16				cur_water_level;
+Farmable	farm_list[MAX_FARM_LIST];
+
+typedef enum sprites_names {
+	CARROT_SMALL, CARROT_MEDIUM, CARROT_BIG, MASHROOM_SMALL, MASHROOM_MEDIUM, MASHROOM_BIG,
+	POTATO_SMALL, POTATO_MEDIUM, POTATO_BIG, TOMATO_SMALL, TOMATO_MEDIUM, TOMATO_BIG,
+	SEEDS, BARREL, IRRIGATOR, TREE, BRANCH, GRASS, ROCK,
+} sprites_names;
+
+Sprite sprites_attributes[]=
+{
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,0)| 0, 0	},//CARROT_SMALL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,2)| 0, 0	},//CARROT_MEDIUM
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,4)| 0, 0	},//CARROT_BIG
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,0)| 0, 0	},//MASHROOM_SMALL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,2)| 0, 0	},//MASHROOM_MEDIUM
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,4)| 0, 0	},//MASHROOM_BIG
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10,0)| 0, 0	},//POTATO_SMALL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10,2)| 0, 0	},//POTATO_MEDIUM
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10,4)| 0, 0	},//POTATO_BIG
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(12,0)| 0, 0	},//TOMATO_SMALL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(12,2)| 0, 0	},//TOMATO_MEDIUM
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4,12)| 0, 0	},//*TOMATO_BIG
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(0,14)| 0, 0	},//*SEEDS
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(14,2)| 0, 0	},//BARREL
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4,14)| 0, 0	},//IRRIGATOR
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_64, TID_2D(6,6) | 0, 0	},//TREE
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,10)| 0, 0	},//BRANCH
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(6,12)| 0, 0	},//GRASS
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,10)| 0, 0	},//ROCK
+};
+
+PT view_center = {240>>1, 160>>1};
+
+// FUNCTIONS
+
+void updated_farm_position(SpriteHandler *sh){
+	int i;
+	Sprite *obj= &sh->oamBuff[FARM_OAM_OFFSET];
+
+
+	for (i = 0; i < MAX_FARM_LIST; ++i, obj++)
+	{
+		PT A = {FARM_AREA_X<<3, FARM_AREA_Y<<3};
+		PT B = {sh->dude.worldX, sh->dude.worldY};
+		PT H = subPT(A,B);
+		PT P = addPT(view_center, H);
+
+		u16 x = (P.x ) + ((i%MAX_FARM_W)<<4);
+		u16 y = (P.y ) + ((i/MAX_FARM_W)<<4);
+		BFN_SET(obj[0].attribute0, y, ATTR0_Y);
+		BFN_SET(obj[0].attribute1, x, ATTR1_X);
+		// BFN_SET(obj[0].attribute0, MODE_NORMAL, ATTR0_MODE);
+	}
+	// 	i = 0;
+	// 	PT A = {FARM_AREA_X<<3, FARM_AREA_Y<<3};
+	// 	PT B = {sh->dude.worldX, sh->dude.worldY};
+	// 	PT H = subPT(A,B);
+	// 	PT P = addPT(view_center, H);
+
+	// 	// u16 x = (P.x ) + ((i%MAX_FARM_W)<<4);
+	// 	// u16 y = (P.y ) + ((i/MAX_FARM_W)<<4);
+	// 	char buff[50];
+	// sprintf(buff, "A(%d, %d) B(%d, %d) \n H(%d, %d) P(%d, %d) ", A.x, A.y, B.x, B.y, H.x, H.y, P.x, P.y);
+	// reset_text();
+	// print(4, 3, buff, TILE_ASCI_TRAN);
+
+}
+
+void init_farm_list(SpriteHandler *sh){
+	int i;
+	Sprite *obj= &sh->oamBuff[FARM_OAM_OFFSET];
+	for (i = 0; i < MAX_FARM_LIST; ++i, obj++)
+	{
+		PT A = {FARM_AREA_X, FARM_AREA_Y};
+		PT B = {sh->dude.worldX, sh->dude.worldY};
+		PT H = subPT(A,B);
+		PT P = addPT(view_center, H);
+
+		// P = (PT){30,30};
+
+		u16 x = (P.x ) + ((i%MAX_FARM_W)<<4);
+		u16 y = (P.y ) + ((i/MAX_FARM_W)<<4);
+		farm_list[i].state = FS_EMPTY;
+		BFN_SET(obj[0].attribute0, y, ATTR0_Y);
+		BFN_SET(obj[0].attribute1, x, ATTR1_X);
+		BFN_SET(obj[0].attribute0, MODE_NORMAL, ATTR0_MODE);
+	}
+
+		// farm_list[0].state 	= FS_SEEDS;
+		// farm_list[0].type 	= cur_plant_sel;
+		// farm_list[0].age 		= 0;
+		// farm_list[0].water 	= 0;
+		// update_sprite_id(0, sh);
+		// farm_list[1].state 	= FS_BIG;
+		// farm_list[1].type 	= cur_plant_sel;
+		// farm_list[1].age 		= 0;
+		// farm_list[1].water 	= 0;
+		// update_sprite_id(1, sh);
+
+}
+
+void update_sprite_id(u32 id, SpriteHandler *sh){
+	Sprite *obj= &sh->oamBuff[FARM_OAM_OFFSET+id];
+	if(farm_list[id].state){
+		u32 sid;
+		if( farm_list[id].state == FS_SEEDS){
+			sid = SEEDS;
+		}
+		else{
+			sid = (farm_list[id].type * 3) + (farm_list[id].state - FS_SMALL);
+		}
+		obj[ 0 ].attribute0 = (obj[ 0 ].attribute0&0xFF) | sprites_attributes[ sid ].attribute0;
+		obj[ 0 ].attribute1 = (obj[ 0 ].attribute1&0xFF) | sprites_attributes[ sid ].attribute1;
+		obj[ 0 ].attribute2 = sprites_attributes[ sid ].attribute2;
+	}
+	else{
+		BFN_SET(obj[0].attribute0, MODE_TRANSPARENT, ATTR0_MODE);
+	}
+
+}
+
+s32 getFarmId(TileQuad * tq){
+	// return 0;
+	u32 x = (tq->tlX - FARM_AREA_X)/2;
+	u32 y = ( tq->tlY - FARM_AREA_Y)/2;
+	if(x<0 || x>=10 || y<0 || y>=10){
+		return -1;
+	}
+	return ( (y * MAX_FARM_W) + x ) ;
+}
+
+
+void run_action(TileQuad * cur_tq, SpriteHandler * sh){
+	s32 farm_id = getFarmId(cur_tq);
+	switch(cur_tool_sel){
+		case TT_EMPTY:
+			break;
+		case TT_SEEDS:
+			if(farm_list[farm_id].state == FS_EMPTY && ID_OK(farm_id) )
+			{
+				farm_list[farm_id].state 	= FS_SEEDS;
+				farm_list[farm_id].type 	= cur_plant_sel;
+				farm_list[farm_id].age 		= 0;
+				farm_list[farm_id].water 	= 0;
+				update_sprite_id(farm_id, sh);
+			}
+			break;
+		case TT_WATER:
+			break;
+		case TT_AXE:
+			break;
+		case TT_HAMMER:
+			break;
+		case TT_HOE:
+			break;
+	}
+}
+
+
+//------------------------------end_add1
+
+
+
 /* Region loading */
 void loadRegion(ResourcePack*, int, int, int);
 void loadRegionMap(MapHandler*, const unsigned char*, int, int);
@@ -51,6 +237,7 @@ int main() {
 }
 
 ResourcePack* Initialize() {
+
 	/* Set Mode */
     SetMode(0 | BG0_ENABLE | BG1_ENABLE | BG2_ENABLE | BG3_ENABLE);
 
@@ -105,7 +292,10 @@ ResourcePack* Initialize() {
 
     REG_DISPCNT |= OBJ_ENABLE | OBJ_MAP_2D;
     initSpriteHandler(pResources, (u16*)sprite_data_2d_8bppTiles, 112<<8, 64<<8);
-    
+//------------------------------add1
+	init_farm_list(&pResources->sh);
+//------------------------------end_add1
+
 	return pResources;
 }
 
@@ -125,10 +315,13 @@ void LoadContent(ResourcePack* pResources) {
 void Update(ResourcePack* pResources) {
 	int i, mask;
 	double fat;
-	/*char buff[30];*/
+	char buff[30];
 	TileQuad* tq = (TileQuad*) malloc(sizeof(TileQuad));
 	Portal portal;
 	SpriteCharacter* dude = &pResources->sh.dude;
+
+	updated_farm_position(&pResources->sh);
+
 	keyPoll();
 	if(keyIsDown(BUTTON_UP)) {
 		if(dude_update(pResources)) {
@@ -260,9 +453,12 @@ void Update(ResourcePack* pResources) {
 		} else if(pResources->sh.dude.dir == LOOK_DOWN) {
             tq = getTileQuad(pResources->mh3, pResources->sh.dude.worldX, pResources->sh.dude.worldY + pResources->sh.dude.boundingBox->y + pResources->sh.dude.boundingBox->ySize + 1);
 		}
-        /*sprintf(buff, "%d %d %d %d %d %d", pResources->sh.dude.worldX, pResources->sh.dude.worldY, tq->tl, tq->tr, tq->bl, tq->br);
+		run_action(tq, &pResources->sh);
+
+
+        sprintf(buff, "%d %d %d %d %d %d", tq->tlX, tq->tlY, tq->tl, tq->tr, tq->bl, tq->br);
 		reset_text();
-		print(3, 3, buff, TILE_ASCI_TRAN);*/
+		print(3, 3, buff, TILE_ASCI_TRAN);
 	} else if(keyHit(BUTTON_B)) {
 		if(gameState == (HOME + HOME_OUTSIDE)) {
 			gameState = ROAD1;
@@ -417,6 +613,7 @@ TileQuad* getTileQuad(MapHandler* mh, int x, int y) {
 	}
 	if(isTop && isLeft) {
 		tq->tl = mh->map[tmpX + tmpY*mh->width];
+		tq->tlX = tmpX; tq->tlY = tmpY;
 
 		tmpX++;
 		tq->tr = mh->map[tmpX + tmpY*mh->width];
@@ -432,6 +629,7 @@ TileQuad* getTileQuad(MapHandler* mh, int x, int y) {
 
         tmpX--;
         tq->tl = mh->map[tmpX + tmpY*mh->width];
+        tq->tlX = tmpX; tq->tlY = tmpY;
 
 		tmpY++;
 		tq->bl = mh->map[tmpX + tmpY*mh->width];
@@ -443,6 +641,7 @@ TileQuad* getTileQuad(MapHandler* mh, int x, int y) {
 
 		tmpY--;
         tq->tl = mh->map[tmpX + tmpY*mh->width];
+        tq->tlX = tmpX; tq->tlY = tmpY;
 
         tmpX++;
 		tq->tr = mh->map[tmpX + tmpY*mh->width];
@@ -457,6 +656,7 @@ TileQuad* getTileQuad(MapHandler* mh, int x, int y) {
 
         tmpX--;
 		tq->tl = mh->map[tmpX + tmpY*mh->width];
+		tq->tlX = tmpX; tq->tlY = tmpY;
 
 		tmpY++;
         tq->bl = mh->map[tmpX + tmpY*mh->width];
@@ -498,10 +698,10 @@ Sprite dudeObjs[1]=
 
 const u32 id_stand[4]= { TID_2D(4,0), TID_2D(0,0), TID_2D(4,0), TID_2D(8,0) };
 const u32 id_walk[4][8]= {
- {TID_2D(4,4), TID_2D(4,4), TID_2D(4,0), TID_2D(4,0), TID_2D(4,8), TID_2D(4,8), TID_2D(4,8), TID_2D(4,0)},
- {TID_2D(0,4), TID_2D(0,4), TID_2D(0,0), TID_2D(0,0), TID_2D(0,8), TID_2D(0,8), TID_2D(0,8), TID_2D(0,0)},
- {TID_2D(4,4), TID_2D(4,4), TID_2D(4,0), TID_2D(4,0), TID_2D(4,8), TID_2D(4,8), TID_2D(4,8), TID_2D(4,0)},
- {TID_2D(8,4), TID_2D(8,4), TID_2D(8,0), TID_2D(8,0), TID_2D(8,8), TID_2D(8,8), TID_2D(8,8), TID_2D(8,0)},
+ {TID_2D(4,2), TID_2D(4,2), TID_2D(4,0), TID_2D(4,0), TID_2D(4,4), TID_2D(4,4), TID_2D(4,4), TID_2D(4,0)},
+ {TID_2D(0,2), TID_2D(0,2), TID_2D(0,0), TID_2D(0,0), TID_2D(0,4), TID_2D(0,4), TID_2D(0,4), TID_2D(0,0)},
+ {TID_2D(4,2), TID_2D(4,2), TID_2D(4,0), TID_2D(4,0), TID_2D(4,4), TID_2D(4,4), TID_2D(4,4), TID_2D(4,0)},
+ {TID_2D(8,2), TID_2D(8,2), TID_2D(8,0), TID_2D(8,0), TID_2D(8,4), TID_2D(8,4), TID_2D(8,4), TID_2D(8,0)},
 };
 
 void dude_init(SpriteHandler *sh, int x, int y, int dude_id)

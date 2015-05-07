@@ -18,9 +18,6 @@
 
 #define SPaletteMem ((u16*) 0x5000200)
 
-// typedef struct BG_POINT { s16 x, y; }  BG_POINT, PT;
-
-#define TID_2D(i,j) ((i<<5)+j)
 
 #define ATTR0_Y_MASK		0x00FF
 #define ATTR0_Y_SHIFT			 0
@@ -33,6 +30,12 @@
 #define ATTR1_FLIP_MASK		0x3000
 #define ATTR1_FLIP_SHIFT		12
 #define ATTR1_FLIP(n)		((n)<<ATTR1_FLIP_SHIFT)
+//-----------------------------------------------------add1
+#define ATTR0_MODE_MASK		0x0300
+#define ATTR0_MODE_SHIFT		 8
+#define ATTR0_MODE(n)		((n)<<ATTR0_MODE_SHIFT)
+//----------------------------------------------------end_add1
+
 
 #define BFN_PREP(x, name)	( ((x)<<name##_SHIFT) & name##_MASK )
 #define BFN_GET(y, name)	( ((y) & name##_MASK)>>name##_SHIFT )
@@ -53,7 +56,7 @@ enum LookDir
 
 // character speed
 #define DUDE_SPEED				0x00D0
-// #define DUDE_SPEED				0x0400
+// #define DUDE_SPEED				0x1000
 
 
 
