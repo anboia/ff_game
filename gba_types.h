@@ -67,7 +67,7 @@ typedef struct MapHandler {
 	int diffX, diffY;
 	int bgNextCol, bgNextRow;
 	int bgPrevCol, bgPrevRow;
-    int mapNextCol, mapNextRow;
+	int mapNextCol, mapNextRow;
 	int mapPrevCol, mapPrevRow;
 	int width, height;
 	const u8* tiles;

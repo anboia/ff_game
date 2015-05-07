@@ -67,14 +67,15 @@ Sprite sprites_attributes[]=
 	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(8,10)| 0, 0	},//ROCK
 };
 
-PT view_center = {240>>1, 160>>1};
+PT view_center = {112, 64};/////////////////////////////////////////////////
+// PT v_tile_quad[4] = {{12,20},{0,28},{-12,20},{0,20}};
+PT v_tile_quad[4] = {{8,26},{8,26},{8,26},{8,26}};
 
 // FUNCTIONS
 
 void updated_farm_position(SpriteHandler *sh){
 	int i;
 	Sprite *obj= &sh->oamBuff[FARM_OAM_OFFSET];
-
 
 	for (i = 0; i < MAX_FARM_LIST; ++i, obj++)
 	{
@@ -89,15 +90,17 @@ void updated_farm_position(SpriteHandler *sh){
 		BFN_SET(obj[0].attribute1, x, ATTR1_X);
 		// BFN_SET(obj[0].attribute0, MODE_NORMAL, ATTR0_MODE);
 	}
-	// 	i = 0;
-	// 	PT A = {FARM_AREA_X<<3, FARM_AREA_Y<<3};
-	// 	PT B = {sh->dude.worldX, sh->dude.worldY};
-	// 	PT H = subPT(A,B);
-	// 	PT P = addPT(view_center, H);
+		i = 0;
+		PT A = {FARM_AREA_X<<3, FARM_AREA_Y<<3};
+		PT B = {sh->dude.worldX, sh->dude.worldY};
+		PT H = subPT(A,B);
+		PT P = addPT(view_center, H);
 
-	// 	// u16 x = (P.x ) + ((i%MAX_FARM_W)<<4);
-	// 	// u16 y = (P.y ) + ((i/MAX_FARM_W)<<4);
-	// 	char buff[50];
+		// u16 x = (P.x ) + ((i%MAX_FARM_W)<<4);
+		// u16 y = (P.y ) + ((i/MAX_FARM_W)<<4);
+
+
+	// char buff[50];
 	// sprintf(buff, "A(%d, %d) B(%d, %d) \n H(%d, %d) P(%d, %d) ", A.x, A.y, B.x, B.y, H.x, H.y, P.x, P.y);
 	// reset_text();
 	// print(4, 3, buff, TILE_ASCI_TRAN);
@@ -114,27 +117,13 @@ void init_farm_list(SpriteHandler *sh){
 		PT H = subPT(A,B);
 		PT P = addPT(view_center, H);
 
-		// P = (PT){30,30};
-
 		u16 x = (P.x ) + ((i%MAX_FARM_W)<<4);
 		u16 y = (P.y ) + ((i/MAX_FARM_W)<<4);
 		farm_list[i].state = FS_EMPTY;
 		BFN_SET(obj[0].attribute0, y, ATTR0_Y);
 		BFN_SET(obj[0].attribute1, x, ATTR1_X);
-		BFN_SET(obj[0].attribute0, MODE_NORMAL, ATTR0_MODE);
+		// BFN_SET(obj[0].attribute0, MODE_NORMAL, ATTR0_MODE);
 	}
-
-		// farm_list[0].state 	= FS_SEEDS;
-		// farm_list[0].type 	= cur_plant_sel;
-		// farm_list[0].age 		= 0;
-		// farm_list[0].water 	= 0;
-		// update_sprite_id(0, sh);
-		// farm_list[1].state 	= FS_BIG;
-		// farm_list[1].type 	= cur_plant_sel;
-		// farm_list[1].age 		= 0;
-		// farm_list[1].water 	= 0;
-		// update_sprite_id(1, sh);
-
 }
 
 void update_sprite_id(u32 id, SpriteHandler *sh){
@@ -157,10 +146,19 @@ void update_sprite_id(u32 id, SpriteHandler *sh){
 
 }
 
-s32 getFarmId(TileQuad * tq){
+s32 getFarmId(SpriteHandler *sh){
 	// return 0;
-	u32 x = (tq->tlX - FARM_AREA_X)/2;
-	u32 y = ( tq->tlY - FARM_AREA_Y)/2;
+	PT B = {sh->dude.worldX, sh->dude.worldY};
+	PT P = addPT(B,v_tile_quad[sh->dude.dir]);
+	int x = ( (P.x>>3) - FARM_AREA_X)/2;
+	int y = ( (P.y>>3) - FARM_AREA_Y)/2;
+
+	char buff[50];
+	sprintf(buff, "B(%d, %d)\nP(%d, %d) \nx,y(%d, %d)\nstate:%d ", B.x, B.y, P.x, P.y, x, y, sh->dude.dir);
+	reset_text();
+	print(3, 3, buff, TILE_ASCI_TRAN);
+
+
 	if(x<0 || x>=10 || y<0 || y>=10){
 		return -1;
 	}
@@ -169,7 +167,7 @@ s32 getFarmId(TileQuad * tq){
 
 
 void run_action(TileQuad * cur_tq, SpriteHandler * sh){
-	s32 farm_id = getFarmId(cur_tq);
+	s32 farm_id = getFarmId(sh);
 	switch(cur_tool_sel){
 		case TT_EMPTY:
 			break;
@@ -456,9 +454,9 @@ void Update(ResourcePack* pResources) {
 		run_action(tq, &pResources->sh);
 
 
-        sprintf(buff, "%d %d %d %d %d %d", tq->tlX, tq->tlY, tq->tl, tq->tr, tq->bl, tq->br);
-		reset_text();
-		print(3, 3, buff, TILE_ASCI_TRAN);
+    // sprintf(buff, "%d %d %d %d %d %d", tq->tlX, tq->tlY, tq->tl, tq->tr, tq->bl, tq->br);
+		// reset_text();
+		// print(3, 3, buff, TILE_ASCI_TRAN);
 	} else if(keyHit(BUTTON_B)) {
 		if(gameState == (HOME + HOME_OUTSIDE)) {
 			gameState = ROAD1;
