@@ -28,7 +28,7 @@
 #define WATER_FULL 9
 #define MAX_FARM_W 10
 #define MAX_FARM_H 10
-#define MAX_FARM_LIST (MAX_FARM_W*MAX_FARM_H)
+#define MAX_FARM_LIST (100)
 #define PRI_FARM 1<<11
 
 // start x, y position (tile format)
@@ -36,7 +36,7 @@
 #define FARM_AREA_Y 72
 
 #define ID_OK(id) (id > -1)
-#define FARM_OAM_OFFSET 27
+#define FARM_OAM_OFFSET 2
 
 // GLOBALS
 Farmable	cur_plant_holding;			// init with .state = FS_EMPTY
@@ -113,7 +113,6 @@ void updated_farm_position(SpriteHandler *sh){
 
 		if(farm_list[i].state == FS_EMPTY)
 			obj[0].attribute0 = MODE_TRANSPARENT;
-			// BFN_SET(obj[0].attribute0, MODE_TRANSPARENT, ATTR0_MODE);
 	}
 }
 
@@ -152,8 +151,7 @@ void update_sprite_id(u32 id, SpriteHandler *sh){
 		obj[ 0 ].attribute2 = sprites_attributes[ sid ].attribute2;
 	}
 	else{
-		// BFN_SET(obj[0].attribute0, MODE_TRANSPARENT, ATTR0_MODE);
-		obj[0].attribute0 = MODE_TRANSPARENT;
+		BFN_SET(obj[0].attribute0, MODE_TRANSPARENT, ATTR0_MODE);
 	}
 
 }
@@ -165,15 +163,15 @@ s32 getFarmId(SpriteHandler *sh){
 	int x = ( (P.x>>3) - FARM_AREA_X)/2;
 	int y = ( (P.y>>3) - FARM_AREA_Y)/2;
 
-	// char buff[50];
-	// sprintf(buff, "B(%d, %d)\nP(%d, %d) \nx,y(%d, %d)\nstate:%d ", B.x, B.y, P.x, P.y, x, y, sh->dude.dir);
-	// reset_text();
-	// print(3, 3, buff, TILE_ASCI_TRAN);
 
 
 	if(x<0 || x>=10 || y<0 || y>=10){
 		return -1;
 	}
+	// char buff[50];
+	// sprintf(buff, "B(%d, %d)\nP(%d, %d) \nx,y(%d, %d)\id:%d ", B.x, B.y, P.x, P.y, x, y, ( (y * MAX_FARM_W) + x ));
+	// reset_text();
+	// print(3, 3, buff, TILE_ASCI_TRAN);
 	return ( (y * MAX_FARM_W) + x ) ;
 }
 
@@ -190,9 +188,6 @@ void run_action(TileQuad * cur_tq, SpriteHandler * sh){
 
 				farm_list[farm_id].state 	= FS_EMPTY;
 				update_sprite_id(farm_id, sh);
-sprintf(buff, "TT_EMPTY - %d", farm_id);
-reset_text();
-print(3, 3, buff, TILE_ASCI_TRAN);
 			}
 
 			break;
@@ -204,6 +199,9 @@ print(3, 3, buff, TILE_ASCI_TRAN);
 				farm_list[farm_id].age 		= 0;
 				farm_list[farm_id].water 	= 1;
 				update_sprite_id(farm_id, sh);
+sprintf(buff, "TT_EMPTY - %d", farm_id);
+reset_text();
+print(3, 3, buff, TILE_ASCI_TRAN);
 			}
 			break;
 		case TT_WATER:
@@ -306,34 +304,40 @@ ResourcePack* Initialize() {
 	SetMode(4 | BG2_ENABLE);//////////////////////////////*******************///////////////////////////
 
 	int x,y;//////////////////////////////*******************///////////////////////////
-/*/
-	memcpy(paletteMem, title_Palette, 256);////////////////////////////////////////////////////////
-	for(x = 0; x < 240; x++)//////////////////////////////////////////////////////
-		for(y = 0; y < 160; y++)///////////////////////////////////////////////////////
-			drawPixel4(x,y, title_Bitmap[y*240+x]);//////////////////////////////////////////////////
 
-	while(1)////////////////////////////////////////////////////////
+	memcpy(paletteMem, title_Palette, 256);//////////////////////////////*******************///////////////////////////
+	for(x = 0; x < 240; x++)//////////////////////////////*******************///////////////////////////
+		for(y = 0; y < 160; y++)//////////////////////////////*******************///////////////////////////
+			drawPixel4(x,y, title_Bitmap[y*240+x]);//////////////////////////////*******************///////////////////////////
+
+	PlaySound(&s_openning);
+
+	int i = 0;
+	while(1)//////////////////////////////*******************///////////////////////////
 	{
-		keyPoll();////////////////////////////////////////////////////////
+		keyPoll();//////////////////////////////*******************///////////////////////////
+		i++;
+		if(i > 210000){
+			REG_TM0CNT = 0;
+			REG_DMA1CNT_H = 0;
+			SampleLength = 0;
+		}
 
-		if(keyHit(BUTTON_START)){//////////////////////////////////////////////////////
-			break;//////////////////////////////////////////////////////
-		}/////////////////////////////////////////////////////
-	}/////////////////////////////////////////////////////
+		if(keyHit(BUTTON_START)){//////////////////////////////*******************///////////////////////////
+			REG_TM0CNT = 0;
+			REG_DMA1CNT_H = 0;
+			SampleLength = 0;
+			break;//////////////////////////////*******************///////////////////////////
+		}//////////////////////////////*******************///////////////////////////
+	}
 
-  SetMode(0 | BG0_ENABLE);//////////////////////////////////////////////////////
+	/* Set Mode */
+    SetMode(0 | BG0_ENABLE);//////////////////////////////*******************///////////////////////////
 
-	init_text();///////////////////////////////////////////////////////
-	game_intro();///////////////////////////////////////////////////////
+	init_text();//////////////////////////////*******************///////////////////////////
+	game_intro();//////////////////////////////*******************///////////////////////////
 
-	//Define some interrupts. I still dont know why/
-	//REG_IME = 0x00;/////////////////////////////////////////////////////
-	//REG_INTERRUPT = (u32)MyHandler;//////////////////////////////////////////////////////
-	//REG_IE |= INT_VBLANK;//////////////////////////////////////////////////////
-	//REG_DISPSTAT |= 0x08;/////////////////////////////////////////////////
-	//REG_IME = 0x01;
 
-//*/
 
 	/* Set Mode */
     SetMode(0 | BG0_ENABLE | BG1_ENABLE | BG2_ENABLE | BG3_ENABLE);
@@ -465,6 +469,8 @@ void show_enter_name(){
 void game_intro(){
 
 	show_enter_name();
+
+	PlaySound(&s_back);
 
 	char conc_text[61];
 	sprintf (conc_text, "%c%c%c%c%c%c%c%c, now it's your turn to work and make the farm thrive", *name[0], *name[1], *name[2], *name[3], *name[4], *name[5], *name[6], *name[7]);
@@ -776,7 +782,7 @@ void Update(ResourcePack* pResources) {
 		if(counter_seconds != counter_seconds_before){
 
     	if(counter_seconds > 16 && counter_seconds <= 20){
-            for(i = 0; i < 256; i++){
+            for(i = 0; i < 240; i++){
                 if(Map_Palette[i] > 0){
                     mask = (1<<6)-1;
                     fat = 0.95;
@@ -786,7 +792,7 @@ void Update(ResourcePack* pResources) {
                 }
 			}
    	    } else if(counter_seconds > 1 && counter_seconds <= 5){
-            for(i = 0; i < 256; i++){
+            for(i = 0; i < 240; i++){
                 if(Map_Palette[i] > 0){
                     mask = (1<<6)-1;
                     fat = 1.05;
@@ -807,7 +813,12 @@ void Update(ResourcePack* pResources) {
         counter_seconds = (factor_hour >> 8);
 
         if(counter_seconds == 7){
-            DMAFastCopy((void*) Map_Palette, (void*) BGPaletteMem, 256, DMA_16NOW);
+            DMAFastCopy((void*) Map_Palette, (void*) BGPaletteMem, 240, DMA_16NOW);
+
+			REG_TM0CNT = 0;
+			REG_DMA1CNT_H = 0;
+			SampleLength = 0;
+			PlaySound(&s_back);
         } else if(counter_seconds > 24){
            counter_seconds = factor_hour = 0;
            another_day(&pResources->sh);

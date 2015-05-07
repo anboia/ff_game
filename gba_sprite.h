@@ -55,5 +55,5 @@ void oam_init(Sprite* oamBuff);
 
 INLINE void updateSpriteMemory(Sprite *oamBuff) {
 	// memcpy(oamMem, oamBuff, 512);
-	DMAFastCopy((void*) oamBuff, (void*) oamMem, 128, DMA_32NOW);
+	DMAFastCopy((void*) oamBuff, (void*) oamMem, 128<<1, DMA_32NOW);
 }

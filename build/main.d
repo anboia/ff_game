@@ -29,7 +29,8 @@ main.o: /Users/andresaboia/projects/ff_game/main.c \
  /Users/andresaboia/projects/ff_game/sound_openning.h \
  /Users/andresaboia/projects/ff_game/sound_spurs.h \
  /Users/andresaboia/projects/ff_game/sound_select.h \
- /Users/andresaboia/projects/ff_game/sound_story.h
+ /Users/andresaboia/projects/ff_game/sound_story.h \
+ /Users/andresaboia/projects/ff_game/sound_background.h
 
 /Users/andresaboia/projects/ff_game/gba_helper.h:
 
@@ -92,3 +93,5 @@ main.o: /Users/andresaboia/projects/ff_game/main.c \
 /Users/andresaboia/projects/ff_game/sound_select.h:
 
 /Users/andresaboia/projects/ff_game/sound_story.h:
+
+/Users/andresaboia/projects/ff_game/sound_background.h:

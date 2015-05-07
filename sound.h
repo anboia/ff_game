@@ -5,6 +5,7 @@
 #include "sound_spurs.h"
 #include "sound_select.h"
 #include "sound_story.h"
+#include "sound_background.h"
 
 
 
@@ -50,7 +51,6 @@
 MULTIBOOT
 
 
-#define REG_VCOUNT *(volatile unsigned short*) 0x04000006
 
 void WaitVBlack(){
 	while(REG_VCOUNT >= 160);
@@ -72,6 +72,9 @@ sound s_dig = {&digging, 20000, 9232};
 sound s_rooster = {&rooster, 8000, 15984};
 sound s_openning = {&openning, 8000, 19216}; 
 sound s_spurs = {&spurs, 8000, 12216};
+sound s_select = {&select, 8000, 256};
+sound s_story = {&story, 8000, 97376};
+sound s_back = {&background, 8000, 97376};
 
 
 //global variables 
