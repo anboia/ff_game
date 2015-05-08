@@ -11,6 +11,7 @@
 #include "sound.h" //////////////////////////////*******************///////////////////////////
 
 
+
 #define DUDE_PRIORITY 1 //////////////////////////////*******************///////////////////////////
 
 
@@ -20,7 +21,8 @@
 #define HITMAP_FARMABLE_COLOR 11 /*((unsigned short*) (0x05000016))*/
 #define HITMAP_PORTAL_COLOR 12 /*((unsigned short*) (0x05000018))*/
 #define HITMAP_WATER_COLOR 14 /*((unsigned short*) (0x0500001C))*/
-
+// #define TIME_SPEED 1<<17
+#define TIME_SPEED 1<<21
 
 
 //------------------------------add1
@@ -36,24 +38,33 @@
 #define FARM_AREA_Y 72
 
 #define ID_OK(id) (id > -1)
-#define FARM_OAM_OFFSET 2
+#define FARM_OAM_OFFSET 5
 
 // GLOBALS
 Farmable	cur_plant_holding;			// init with .state = FS_EMPTY
 
 ToolType	cur_tool_sel = TT_SEEDS;		// current tool selected
 PlantType	cur_plant_sel = PT_TOMATOS;	// current plant selected
-
+int flagBackSound = 0;
 
 u16				cur_water_level;
 Farmable	farm_list[MAX_FARM_LIST];
 
 int plant_age[4] = {1,1,1,1};
 
+typedef struct Market{
+	int q[4];
+	int p[4];
+}Market;
+
+Market market = {0,0,0,0,10,8,9,10};
+
+
+double money = 50.0;
 
 char *name[8] = {" ", " ", " ", " ", " ", " ", " ", " "}; //////////////////////////////*******************///////////////////////////
-int factor_hour = 6<<8;   ////////////////////////******************/////////////////////
-int counter_seconds = 6;////////////////////////******************/////////////////////
+int factor_hour = 7<<26;   ////////////////////////******************/////////////////////
+int counter_seconds = 7;////////////////////////******************/////////////////////
 int counter_seconds_before = 5;
 
 
@@ -81,8 +92,8 @@ Sprite sprites_attributes[]=
 	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4 ,12)| PRI_FARM, 0	},//TOMATO_BIG
 	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(0 ,14)| PRI_FARM, 0	},//SEEDS
 	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(2 ,14)| PRI_FARM, 0	},//BARREL
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(14, 4)| PRI_FARM, 0	},//IRRIGATOR
-	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_64, TID_2D(6 , 6)| PRI_FARM, 0},//TREE
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(4, 14)| PRI_FARM, 0	},//IRRIGATOR
+	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_64, TID_2D(6 , 6)| PRI_FARM, 0	},//TREE
 	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10, 6)| PRI_FARM, 0	},//BRANCH
 	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(12, 6)| PRI_FARM, 0	},//GRASS
 	{	0 | MODE_NORMAL 		 | COLOR_256 | SQUARE, SIZE_16, TID_2D(10, 8)| PRI_FARM, 0	},//ROCK
@@ -90,8 +101,52 @@ Sprite sprites_attributes[]=
 
 PT view_center = {112, 64};
 PT v_tile_quad[4] = {{8,26},{8,26},{8,26},{8,26}};
+PT v_water[4] = {{-4,20},{-4,20},{-4,20},{-4,20}};
 // FUNCTIONS
+WaterAnim ww;
+void init_ww(SpriteHandler * sh){
+	ww.state = 0;
+	Sprite *obj= &sh->oamBuff[1];
+	u32 sid = IRRIGATOR;
+	obj[ 0 ].attribute0 = (obj[ 0 ].attribute0&0xFF) | sprites_attributes[ sid ].attribute0;
+	obj[ 0 ].attribute1 = (obj[ 0 ].attribute1&0xFF) | sprites_attributes[ sid ].attribute1;
+	obj[ 0 ].attribute2 = sprites_attributes[ sid ].attribute2;
+}
+void start_ww(){
+	ww.state = 1;
+	ww.frame = 0;
+}
+void update_ww(SpriteHandler * sh){
+	PT p = addPT(view_center, v_water[sh->dude.dir]);
+	Sprite *obj= &sh->oamBuff[1];
 
+	if(keyReleased(BUTTON_A))ww.state = 0;
+	if(ww.state == 1){ // draw
+		// IRRIGATOR
+
+		// char str[] = "a";
+		// str[0]=147;
+		// print(16, 10, str, TILE_ASCI_TRAN);
+
+		u32 sid = IRRIGATOR;
+		obj[ 0 ].attribute0 = sprites_attributes[ sid ].attribute0;
+		obj[ 0 ].attribute1 = sprites_attributes[ sid ].attribute1;
+		obj[ 0 ].attribute2 = sprites_attributes[ sid ].attribute2 ;
+		BFN_SET(obj[0].attribute0, p.y, ATTR0_Y);
+		BFN_SET(obj[0].attribute1, p.x, ATTR1_X);
+		// BFN_SET(obj[0].attribute2, 1, ATTR2_PRIO);
+		if(sh->dude.dir == LOOK_UP){
+			obj[0].attribute2 = (obj[0].attribute2 & ~0x0C00)|1<<10;
+		}
+		else{
+			obj[0].attribute2 = (obj[0].attribute2 & ~0x0C00);
+		}
+	}
+	else{
+		// reset_text();
+		obj[0].attribute0 = MODE_TRANSPARENT;
+	}
+}
 
 
 void updated_farm_position(SpriteHandler *sh){
@@ -163,15 +218,9 @@ s32 getFarmId(SpriteHandler *sh){
 	int x = ( (P.x>>3) - FARM_AREA_X)/2;
 	int y = ( (P.y>>3) - FARM_AREA_Y)/2;
 
-
-
 	if(x<0 || x>=10 || y<0 || y>=10){
 		return -1;
 	}
-	// char buff[50];
-	// sprintf(buff, "B(%d, %d)\nP(%d, %d) \nx,y(%d, %d)\id:%d ", B.x, B.y, P.x, P.y, x, y, ( (y * MAX_FARM_W) + x ));
-	// reset_text();
-	// print(3, 3, buff, TILE_ASCI_TRAN);
 	return ( (y * MAX_FARM_W) + x ) ;
 }
 
@@ -181,30 +230,40 @@ void run_action(TileQuad * cur_tq, SpriteHandler * sh){
 	switch(cur_tool_sel){
 		case TT_EMPTY:
 
-
-
 			if(farm_list[farm_id].state == FS_BIG && ID_OK(farm_id) ){
 				cur_plant_holding = farm_list[farm_id];
-
 				farm_list[farm_id].state 	= FS_EMPTY;
 				update_sprite_id(farm_id, sh);
+
+				if(farm_list[farm_id].type == PT_POTATO || farm_list[farm_id].type == PT_CARROT){
+					money += market.p[PT_POTATO]*0.7 + market.p[PT_CARROT]*0.7;
+				}
+				else{
+					money += market.p[PT_MUSHROOM]*0.7 + market.p[PT_TOMATOS]*0.7;
+				}
+
 			}
 
 			break;
 		case TT_SEEDS:
 			if(farm_list[farm_id].state == FS_EMPTY && ID_OK(farm_id) )
 			{
-				farm_list[farm_id].state 	= FS_SEEDS;
-				farm_list[farm_id].type 	= cur_plant_sel;
-				farm_list[farm_id].age 		= 0;
-				farm_list[farm_id].water 	= 1;
-				update_sprite_id(farm_id, sh);
-sprintf(buff, "TT_EMPTY - %d", farm_id);
-reset_text();
-print(3, 3, buff, TILE_ASCI_TRAN);
+				if(market.q[cur_plant_sel]> 0){
+					market.q[cur_plant_sel]--;
+					farm_list[farm_id].state 	= FS_SEEDS;
+					farm_list[farm_id].type 	= cur_plant_sel;
+					farm_list[farm_id].age 		= 0;
+					farm_list[farm_id].water 	= 0;
+					farm_list[farm_id].noWaterDays 	= 0;
+					update_sprite_id(farm_id, sh);
+				}
 			}
 			break;
 		case TT_WATER:
+			if(ID_OK(farm_id)){
+				farm_list[farm_id].water = 1;
+				start_ww();
+			}
 			break;
 		case TT_AXE:
 			break;
@@ -225,7 +284,7 @@ void another_day(SpriteHandler * sh){
 		if(farm_list[i].state!=FS_EMPTY){
 			if(farm_list[i].water){
 				farm_list[i].age++;
-				// farm_list[i].water = 0;
+				farm_list[i].water = 0;
 			}
 			else {
 				farm_list[i].noWaterDays++;
@@ -395,6 +454,7 @@ ResourcePack* Initialize() {
     initSpriteHandler(pResources, (u16*)sprite_data_2d_8bppTiles, 112<<8, 64<<8);
 //------------------------------add1
 	init_farm_list(&pResources->sh);
+	init_ww(&pResources->sh);
 //------------------------------end_add1
 
 	return pResources;
@@ -481,7 +541,9 @@ void game_intro(){
 	               conc_text);
 }
 
-void start_menu(){
+void start_menu(){     ///////////////////////////////Aki fii da mae/////////////////////
+
+	char buff[15];
 
 	draw_box(18, TILE_ASCI_OPAC);
 	print(10, 2, "Inventory", TILE_ASCI_OPAC);
@@ -504,10 +566,12 @@ void start_menu(){
 	print(16, 6, str, TILE_ASCI_OPAC);
 	str[0]=142;
 	print(15, 7, str, TILE_ASCI_OPAC);
+
+	sprintf (buff, "%d", market.q[0]+market.q[1]+market.q[2]+market.q[3]);
 	str[0]=143;
 	print(16, 7, str, TILE_ASCI_OPAC);
 	print(18, 6, "Seeds", TILE_ASCI_OPAC);
-	print(22, 7, "9", TILE_ASCI_OPAC);
+	print(22, 7, buff, TILE_ASCI_OPAC);
 
 	str[0]=144;
 	print(15, 9, str, TILE_ASCI_OPAC);
@@ -522,7 +586,8 @@ void start_menu(){
 
 	print(18, 12, "Nothing", TILE_ASCI_OPAC);
 
-	print(20, 16, "$140", TILE_ASCI_OPAC);
+	sprintf (buff, "%$%.2lf", money);
+	print(20, 16, buff, TILE_ASCI_OPAC);
 
 
 	ToolType tool[2][3] = {{TT_AXE,TT_HAMMER, TT_HOE},{TT_SEEDS,TT_WATER,TT_EMPTY}};
@@ -559,6 +624,55 @@ void start_menu(){
 	}
 
 	cur_tool_sel = tool[x][y];
+
+	PlantType vec[4] = {PT_CARROT, PT_MUSHROOM, PT_POTATO, PT_TOMATOS};
+
+	if(cur_tool_sel == TT_SEEDS){
+		int i;
+		for(i = 0; i < 8; i++)
+			print(13,6+i,"             ", TILE_ASCI_OPAC);
+
+
+		int x = 0, y = 0;
+		print(11,6 ,">>", TILE_ASCI_OPAC);
+
+		sprintf (buff, "%d Carrot   $%d", market.q[0], market.p[0] - (market.q[0]%2));
+		print(13,6 , buff, TILE_ASCI_OPAC);
+		sprintf (buff, "%d Mushroom $%d", market.q[1], market.p[1] - (market.q[1]%2));
+		print(13,8 , buff, TILE_ASCI_OPAC);
+		sprintf (buff, "%d Potato   $%d", market.q[2], market.p[2] - (market.q[2]%2));
+		print(13,10 , buff, TILE_ASCI_OPAC);
+		sprintf (buff, "%d Tomato   $%d", market.q[3], market.p[3] - (market.q[3]%2));
+		print(13,12 , buff, TILE_ASCI_OPAC);
+
+		keyPoll();
+		while(1){
+			keyPoll();
+
+			if(keyHit(BUTTON_DOWN) && y < 3){
+				print(11,y*2+6,"  ", TILE_ASCI_OPAC);
+				y++;
+				print(11,y*2+6,">>", TILE_ASCI_OPAC);
+
+			}else if(keyHit(BUTTON_UP) && y > 0){
+				print(11,y*2+6,"  ", TILE_ASCI_OPAC);
+				y--;
+				print(11,y*2+6,">>", TILE_ASCI_OPAC);
+
+			}else if(keyHit(BUTTON_A)){
+				cur_plant_sel = vec[y];
+				break;
+			}else if(keyHit(BUTTON_SELECT)){
+				if(y == 0){ market.q[0]++; money -= market.p[0]; }
+				if(y == 1){ market.q[1]++; money -= market.p[1]; }
+				if(y == 2){ market.q[2]++; money -= market.p[2]; }
+				if(y == 3){ market.q[3]++; money -= market.p[3]; }
+				cur_plant_sel = vec[y];
+				break;
+			}
+		}
+	}
+
 	reset_text();
 
 }
@@ -589,6 +703,7 @@ void Update(ResourcePack* pResources) {
 	Portal portal;
 	SpriteCharacter* dude = &pResources->sh.dude;
 
+	update_ww(&pResources->sh);
 	updated_farm_position(&pResources->sh);
 
 	keyPoll();
@@ -763,7 +878,7 @@ void Update(ResourcePack* pResources) {
     if(last_timers[1] != my_timers[1]) {
 
 
-		sprintf(buff, "%2d:00 h", counter_seconds);////////////////////////////******************///////////////////////////
+		sprintf(buff, "%2d:%02d h", counter_seconds, (  ((1<<26)-1)&factor_hour  )/1118481  ) ;////////////////////////////******************///////////////////////////
 		print(16, 18, buff, TILE_ASCI_TRAN);////////////////////////////******************///////////////////////////
 
 		/* Move water */
@@ -808,22 +923,27 @@ void Update(ResourcePack* pResources) {
 
 	    last_timers[1] = my_timers[1];
 
-	    	#define TIME_SPEED 0x0010
+
         factor_hour+=TIME_SPEED;
-        counter_seconds = (factor_hour >> 8);
+        counter_seconds = (factor_hour >> 26);
 
         if(counter_seconds == 7){
             DMAFastCopy((void*) Map_Palette, (void*) BGPaletteMem, 240, DMA_16NOW);
+			if(flagBackSound == 0){
+				REG_TM0CNT = 0;
+				REG_DMA1CNT_H = 0;
+				SampleLength = 0;
+				flagBackSound = 1;
+				PlaySound(&s_back);
+			}
 
-			REG_TM0CNT = 0;
-			REG_DMA1CNT_H = 0;
-			SampleLength = 0;
-			PlaySound(&s_back);
-        } else if(counter_seconds > 24){
+        } else if(counter_seconds > 23){
            counter_seconds = factor_hour = 0;
+		   			flagBackSound = 0;
            another_day(&pResources->sh);
         }
 	}
+
 
     updateTimers();
     updateSpriteMemory(pResources->sh.oamBuff);

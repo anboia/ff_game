@@ -34,6 +34,11 @@
 #define ATTR0_MODE_MASK		0x0300
 #define ATTR0_MODE_SHIFT		 8
 #define ATTR0_MODE(n)		((n)<<ATTR0_MODE_SHIFT)
+
+#define ATTR2_PRIO_MASK		0x0C00
+#define ATTR2_PRIO_SHIFT		10
+#define ATTR2_PRIO(n)		((n)<<ATTR2_PRIO_SHIFT)
+
 //----------------------------------------------------end_add1
 
 

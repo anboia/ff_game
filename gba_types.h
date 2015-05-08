@@ -146,4 +146,9 @@ typedef struct Farmable{
 	u16 noWaterDays;
 } Farmable;
 
+typedef struct WaterAnim{
+	int state;
+	int frame;
+	PT p;
+} WaterAnim;
 //------------------------------end_add1
